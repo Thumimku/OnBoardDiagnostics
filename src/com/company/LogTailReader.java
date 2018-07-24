@@ -18,6 +18,10 @@ public class LogTailReader{
     private int charInt;
     //Initiate Char;
     private Character character;
+    //Initiate Line Builder;
+    private String LineBuilder;
+    //Initiate MatchRule Engine
+    private MatchRuleEngine matchRuleEngine;
 
 
     //constructor - set initial Lof file length 0 and set Log file path;
@@ -25,6 +29,8 @@ public class LogTailReader{
         LogFilePath=new XmlHelper().getLogFilePath();
         LogFileLength=0L;
         charInt=0;
+        LineBuilder="";
+        matchRuleEngine=MatchRuleEngine.getInstance();
     }
 
 
@@ -48,11 +54,14 @@ public class LogTailReader{
 
 
                         while((charInt=LogFile.read())!= -1){
-                            String  str= String.valueOf((char) charInt);
-                            if(str.compareTo("\n")==0){
-                                System.out.println("\n");
+                            LineBuilder=LineBuilder+String.valueOf((char) charInt);
+                            if(String.valueOf((char) charInt).compareTo("\n")==0){
+                                if(matchRuleEngine.checkinitialmatch(LineBuilder))
+                                    System.out.print(LineBuilder);
+                                    System.out.println("\n");
+                                    LineBuilder="";
                             }
-                            System.out.print((char) charInt);
+
                         }
                         //read Log file
 
