@@ -1,20 +1,13 @@
 package com.company;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 
 public class LogTailReader{
     //this class used to read carbon log file
 
 
-    //Create the Configure xml file
-    private final File ConfFile= new File(System.getProperty("user.dir")+"/conf/wso2conf.xml");
+
     //Initiate Log file
     private RandomAccessFile LogFile;
     //Initiate Log file path
@@ -29,7 +22,7 @@ public class LogTailReader{
 
     //constructor - set initial Lof file length 0 and set Log file path;
     public LogTailReader() {
-        LogFilePath=getLogFilePath();
+        LogFilePath=new XmlHelper().getLogFilePath();
         LogFileLength=0L;
         charInt=0;
     }
@@ -97,29 +90,7 @@ public class LogTailReader{
     }
 
 
-    private String getLogFilePath(){
-        // this method is used to get file path from Configure xml file
-        try {
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(ConfFile);
-            doc.getDocumentElement().normalize();
 
-
-            return doc.getElementsByTagName("path").item(0).getTextContent();
-
-        } catch (SAXException e) {
-            e.printStackTrace();
-            return null;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-    }
 
 
 }
