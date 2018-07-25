@@ -1,9 +1,11 @@
 package com.company;
 
 
+import com.company.Helper.XmlHelper;
+
 import java.io.*;
 
- class LogTailReader{
+ public class LogTailReader{
     //this class used to read carbon log file
 
 
@@ -16,30 +18,27 @@ import java.io.*;
     private Long LogFileLength;
     //Initiate Char int
     private int charInt;
-    //Initiate boolean intake;
-    private Boolean intake;
     //Initiate Line Builder;
     private String LineBuilder;
     //Initiate MatchRule Engine
-    private MatchRuleEngine matchRuleEngine;
+    private final MatchRuleEngine matchRuleEngine;
     //Initiate Error Builder
     private StringBuilder errorbuilder;
 
 
     //constructor - set initial Lof file length 0 and set Log file path;
-     LogTailReader() {
+    public LogTailReader() {
         LogFilePath=new XmlHelper().getLogFilePath();
         LogFileLength=0L;
         charInt=0;
         LineBuilder="";
-        matchRuleEngine=MatchRuleEngine.getInstance();
-        intake=false;
+        matchRuleEngine=new MatchRuleEngine();
         errorbuilder=new StringBuilder();
     }
 
 
 
-    void tailfile() {
+    public void tailfile() {
         //Method used to tail the log file
         try{
             if(LogFilePath!=null){
@@ -82,7 +81,12 @@ import java.io.*;
                         //skip to initial positoin
 
                         while((charInt=LogFile.read())!= -1){
-                            System.out.print((char) charInt);
+                            LineBuilder=LineBuilder+String.valueOf((char) charInt);
+                            if(String.valueOf((char) charInt).compareTo("\n")==0){
+                                matchRuleEngine.validateTestline(LineBuilder);
+                                LineBuilder="";
+
+                            }
                         }
                         //read Log File
 

@@ -1,65 +1,67 @@
 package com.company;
 
+import com.company.ActionExecutor.ActionExecutorConnector;
+import com.company.Helper.XmlHelper;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MatchRuleEngine {
-    private String generalErrorRegex;
-    private String generalInfoRegex;
-    private static   MatchRuleEngine matchRuleEngine;
+ public class MatchRuleEngine {
+     //this class is used match the test line with the regex
+    private String generalErrorRegex;// general error regex
+    private String generalInfoRegex;//general info regex
     private Pattern pattern;
     private Matcher matcher;
-    private Boolean parsemode;
+    private Boolean hasEngineApproved;// check whether the line is eligible or not
 
-    private MatchRuleEngine() {
-        parsemode=false;
+    private StringBuilder LogLine;// stringBuilder used to build LogLine
+
+    private ActionExecutorConnector actionExecutorConnector;// connector used to connect the action executor
+
+    public MatchRuleEngine() {
+        hasEngineApproved=false;
+        generalInfoRegex=new XmlHelper().getGeneralInfoRegEx();
+        generalErrorRegex=new XmlHelper().getGeneralErrorRegEx();
+        actionExecutorConnector= new ActionExecutorConnector();
+
     }
-    public static synchronized MatchRuleEngine getInstance(){
-        if(matchRuleEngine==null){
-            matchRuleEngine=new MatchRuleEngine();
-        }
-        return matchRuleEngine;
-    }
+
 
     private boolean checkInitialErrorMatch(String testline){
-        generalErrorRegex=new XmlHelper().getGeneralErrorRegEx();
+        // check the testline with error regex
         pattern=Pattern.compile(generalErrorRegex);
         matcher=pattern.matcher(testline);
-        if(matcher.find()){
-            return true;
-        }else{
-            return false;
-        }
+        return matcher.find();
     }
     private boolean checkInitialInfoMatch(String testline){
-        generalInfoRegex=new XmlHelper().getGeneralInfoRegEx();
+        // check the testline with info regex
         pattern=Pattern.compile(generalInfoRegex);
         matcher=pattern.matcher(testline);
-        if(matcher.find()){
-            return true;
-        }else{
-            return false;
-        }
+        return matcher.find();
     }
     public void validateTestline(String testline){
-        if (parsemode==true){
+        //this method is used to validate the test line
+        if (hasEngineApproved){
             if(checkInitialInfoMatch(testline)){
-                parsemode=false;
+                hasEngineApproved=false;
+                actionExecutorConnector.printexecution(LogLine);
 
             }else{
-                //parsemode remain true
-                System.out.println(testline);
+                //hasEngineApproved remain true
+                
+                LogLine=LogLine.append(testline);
+
+                //what if command end in parse mode how to get Log line???
             }
 
 
         }else{
             if(checkInitialErrorMatch(testline)){
-                parsemode=true;
-                System.out.println(testline);
+                hasEngineApproved=true;
+                LogLine=new StringBuilder();
+                LogLine=LogLine.append(testline);
 
 
-            }else{
-                //parsemode remain false
             }
         }
     }
