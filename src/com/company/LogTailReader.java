@@ -3,7 +3,7 @@ package com.company;
 
 import java.io.*;
 
-public class LogTailReader{
+ class LogTailReader{
     //this class used to read carbon log file
 
 
@@ -16,26 +16,30 @@ public class LogTailReader{
     private Long LogFileLength;
     //Initiate Char int
     private int charInt;
-    //Initiate Char;
-    private Character character;
+    //Initiate boolean intake;
+    private Boolean intake;
     //Initiate Line Builder;
     private String LineBuilder;
     //Initiate MatchRule Engine
     private MatchRuleEngine matchRuleEngine;
+    //Initiate Error Builder
+    private StringBuilder errorbuilder;
 
 
     //constructor - set initial Lof file length 0 and set Log file path;
-    public LogTailReader() {
+     LogTailReader() {
         LogFilePath=new XmlHelper().getLogFilePath();
         LogFileLength=0L;
         charInt=0;
         LineBuilder="";
         matchRuleEngine=MatchRuleEngine.getInstance();
+        intake=false;
+        errorbuilder=new StringBuilder();
     }
 
 
 
-    public void tailfile() {
+    void tailfile() {
         //Method used to tail the log file
         try{
             if(LogFilePath!=null){
@@ -56,11 +60,11 @@ public class LogTailReader{
                         while((charInt=LogFile.read())!= -1){
                             LineBuilder=LineBuilder+String.valueOf((char) charInt);
                             if(String.valueOf((char) charInt).compareTo("\n")==0){
-                                if(matchRuleEngine.checkinitialmatch(LineBuilder))
-                                    System.out.print(LineBuilder);
-                                    System.out.println("\n");
-                                    LineBuilder="";
+                                matchRuleEngine.validateTestline(LineBuilder);
+                                LineBuilder="";
+
                             }
+
 
                         }
                         //read Log file
