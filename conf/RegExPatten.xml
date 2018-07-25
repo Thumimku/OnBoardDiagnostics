@@ -1,3 +1,0 @@
-<pattern>
-    <GeneralRegex> TID: [/[/-*/d*/]]</GeneralRegex>
-</pattern>
