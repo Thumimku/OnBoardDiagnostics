@@ -1,108 +1,125 @@
 package com.company;
 
 
-import com.company.Helper.XmlHelper;
+import com.company.helper.XmlHelper;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 
- public class LogTailReader{
+/**
+
+
+
+
+ */
+public class LogTailReader {
     //this class used to read carbon log file
 
 
 
-    //Initiate Log file
-    private RandomAccessFile LogFile;
     //Initiate Log file path
-    private String LogFilePath;
-    //Initiate Logfile length
-    private Long LogFileLength;
-    //Initiate Char int
-    private int charInt;
+    private String logFilePath;
+    //Initiate logFile length
+    private Long logFileLength;
+    //Initiate int charRead
+    private int charRead;
     //Initiate Line Builder;
-    private String LineBuilder;
+    private String lineBuilder;
     //Initiate MatchRule Engine
     private final MatchRuleEngine matchRuleEngine;
-    //Initiate Error Builder
-    private StringBuilder errorbuilder;
+
 
 
     //constructor - set initial Lof file length 0 and set Log file path;
     public LogTailReader() {
-        LogFilePath=new XmlHelper().getLogFilePath();
-        LogFileLength=0L;
-        charInt=0;
-        LineBuilder="";
-        matchRuleEngine=new MatchRuleEngine();
-        errorbuilder=new StringBuilder();
+        logFilePath = new XmlHelper().getLogFilePath();
+        logFileLength = 0L;
+        charRead = 0;
+        lineBuilder = "";
+        matchRuleEngine = new MatchRuleEngine();
+
     }
 
 
 
     public void tailfile() {
         //Method used to tail the log file
-        try{
-            if(LogFilePath!=null){
-                LogFile= new RandomAccessFile(LogFilePath,"r");
-                LogFileLength= LogFile.length();
-                System.out.println(LogFile.length());
+        try {
+            if (logFilePath != null) {
+                RandomAccessFile logFile = new RandomAccessFile(logFilePath, "r");
+                logFileLength = logFile.length();
+                System.out.print(logFile.length() + "\n");
+                FileChannel fileChannel = logFile.getChannel();
+                ByteBuffer byteBuffer = ByteBuffer.allocate(512);
 
-                while(true){
-                    Thread.sleep(1000);
-                    // Checking the Log file for every 1 second.
-                    if(LogFile.length()>LogFileLength){
+
+                while (true) {
+                    if (logFile.length() > logFileLength) {
                         //Lines added.
 
-                        LogFile.seek(LogFileLength);
+                        logFile.seek(logFileLength);
                         //skip for last read position
+                        charRead = fileChannel.read(byteBuffer);
+                        while (charRead != -1) {
+                            logFileLength = logFile.length();
+                            byteBuffer.flip();
 
+                            while (byteBuffer.hasRemaining()) {
+                                String charString = String.valueOf((char) byteBuffer.get());
+                                lineBuilder = lineBuilder + charString;
+                                if (charString.compareTo("\n") == 0) {
+                                    matchRuleEngine.validateTestline(lineBuilder);
+                                    lineBuilder = "";
 
-                        while((charInt=LogFile.read())!= -1){
-                            LineBuilder=LineBuilder+String.valueOf((char) charInt);
-                            if(String.valueOf((char) charInt).compareTo("\n")==0){
-                                matchRuleEngine.validateTestline(LineBuilder);
-                                LineBuilder="";
-
+                                }
                             }
 
-
+                            byteBuffer.clear();
+                            charRead = fileChannel.read(byteBuffer);
                         }
-                        //read Log file
 
 
-                        LogFileLength=LogFile.length();
-                        //update Log file Length
-
-                    }else if (LogFile.length()<LogFileLength){
+                    } else if (logFile.length() < logFileLength) {
                         //file lines deleted need to reset.
 
 
-                        LogFileLength=0L;
-                        LogFile.seek(LogFileLength);
+                        logFileLength = 0L;
+                        logFile.seek(logFileLength);
                         //skip to initial positoin
+                        charRead = fileChannel.read(byteBuffer);
+                        while (charRead != -1) {
+                            logFileLength = logFile.length();
+                            byteBuffer.flip();
 
-                        while((charInt=LogFile.read())!= -1){
-                            LineBuilder=LineBuilder+String.valueOf((char) charInt);
-                            if(String.valueOf((char) charInt).compareTo("\n")==0){
-                                matchRuleEngine.validateTestline(LineBuilder);
-                                LineBuilder="";
+                            while (byteBuffer.hasRemaining()) {
+                                String charString = String.valueOf((char) byteBuffer.get());
+                                lineBuilder = lineBuilder + charString;
+                                if (charString.compareTo("\n") == 0) {
+                                    matchRuleEngine.validateTestline(lineBuilder);
+                                    lineBuilder = "";
 
+                                }
                             }
-                        }
-                        //read Log File
 
-                        LogFileLength=LogFile.length();
-                        //update current Log file Length
+                            byteBuffer.clear();
+                            charRead = fileChannel.read(byteBuffer);
+                        }
+
                     }
+
+
                 }
+
             }
-        } catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             System.out.print("File Not Found. Please Check the path");
-            e.printStackTrace();
+
         } catch (IOException e) {
             System.out.print("IO error occurred.");
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+
         }
     }
 
