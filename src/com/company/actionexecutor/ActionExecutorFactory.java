@@ -1,5 +1,5 @@
-package com.company;
-/**
+package com.company.actionexecutor;
+/*
  * Copyright (c) 2005-2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *   WSO2 Inc. licenses this file to you under the Apache License,
@@ -16,12 +16,24 @@ package com.company;
  *  specific language governing permissions and limitations
  *  under the License.
  */
-public class Main {
 
-    public static void main(String[] args) {
-        LogTailReader logTailReader = new LogTailReader();
-        logTailReader.tailfile();
-
+/**
+ * This Factory class used to implement the Factory design pattern.
+ * @author thumilan@wso2.com
+ */
+public class ActionExecutorFactory {
+    //this factory is used to create various action executor class objects.
+    protected ActionExecutor getActionExecutor(String executorType) {
+        if (executorType == null) {
+            return null;
+        } else if (executorType.equalsIgnoreCase("PRINTLINEEXECUTOR")) {
+            return PrintLineExecutor.getInstance();
+        } else if (executorType.equalsIgnoreCase("zipfileexecutor")) {
+            return ZipFileExecutor.getInstance();
+        } else {
+            return null;
+        }
 
     }
+
 }

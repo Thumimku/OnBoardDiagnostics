@@ -1,5 +1,5 @@
-package com.company;
-/**
+package com.company.actionexecutor;
+/*
  * Copyright (c) 2005-2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *   WSO2 Inc. licenses this file to you under the Apache License,
@@ -16,12 +16,25 @@ package com.company;
  *  specific language governing permissions and limitations
  *  under the License.
  */
-public class Main {
 
-    public static void main(String[] args) {
-        LogTailReader logTailReader = new LogTailReader();
-        logTailReader.tailfile();
-
-
+/**
+ * This class used to print the log lines in the console.
+ * @author thumilan@wso2.com
+ */
+public class PrintLineExecutor implements ActionExecutor {
+    private static PrintLineExecutor printLineExecutor;
+    private PrintLineExecutor() {
+    }
+    //User to create singleton printline executor
+    public static synchronized PrintLineExecutor getInstance() {
+        if (printLineExecutor == null) {
+            printLineExecutor = new PrintLineExecutor();
+        }
+        return printLineExecutor;
+    }
+    //override method used to print the logLine
+    @Override
+    public void execute(StringBuilder logLine) {
+        System.out.print(logLine);
     }
 }
