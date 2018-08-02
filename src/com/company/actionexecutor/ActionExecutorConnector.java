@@ -31,7 +31,7 @@ public class ActionExecutorConnector {
     }
     //connect with printExecutor
     public void printexecution(StringBuilder logLine) {
-        actionExecutor = actionExecutorFactory.getActionExecutor("printlineexecutor");
+        actionExecutor = actionExecutorFactory.getActionExecutor("PRINTLINEEXECUTOR");
         actionExecutor.execute(logLine);
     }
     public void zipfileexecution(StringBuilder logLine) {

@@ -1,5 +1,5 @@
 package com.company;
-/**
+/*
  * Copyright (c) 2005-2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *   WSO2 Inc. licenses this file to you under the Apache License,
@@ -16,12 +16,22 @@ package com.company;
  *  specific language governing permissions and limitations
  *  under the License.
  */
+
+import com.company.helper.XmlHelper;
+import com.company.logtailer.Tailer;
+import com.company.logtailer.TailerListener;
+import java.io.File;
+
+/**
+ * Typical Java Main class.
+ */
 public class Main {
 
     public static void main(String[] args) {
-        LogTailReader logTailReader = new LogTailReader();
-        logTailReader.tailfile();
-
+        TailerListener logTailReader = new LogTailReader();
+        File file = new File(new XmlHelper().getLogFilePath());
+        Tailer tailer = new Tailer(file, logTailReader);
+        tailer.run();
 
     }
 }

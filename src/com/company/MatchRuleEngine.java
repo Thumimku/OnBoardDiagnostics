@@ -17,70 +17,94 @@ package com.company;
  *  specific language governing permissions and limitations
  *  under the License.
  */
-import com.company.actionexecutor.ActionExecutorConnector;
+import com.company.actionexecutor.ActionExecutor;
+import com.company.actionexecutor.ActionExecutorFactory;
 import com.company.helper.XmlHelper;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * This class matches log line with the regex.
+ *This class used to match the regex and the logLine.
  *
  * @author thumilan@wso2.com
  */
 
  public class MatchRuleEngine {
-     //this class is used match the test line with the regex
+
     private String generalErrorRegex; // general error regex
-    private String generalInfoRegex; //general info regex
+    private String generalInfoRegex; // general info regex
     private Pattern pattern;
     private Matcher matcher;
     private Boolean hasEngineApproved; // check whether the line is eligible or not
 
     private StringBuilder logLine; // stringBuilder used to build logLine
 
-    private ActionExecutorConnector actionExecutorConnector; // connector used to connect the action executor
+    private ActionExecutorFactory actionExecutorFactory; // actionExecutorFactory to create executor objects
+
+    private ActionExecutor actionExecutor;
 
     public MatchRuleEngine() {
         hasEngineApproved = false;
         generalInfoRegex = new XmlHelper().getGeneralInfoRegEx();
         generalErrorRegex = new XmlHelper().getGeneralErrorRegEx();
-        actionExecutorConnector = new ActionExecutorConnector();
+        actionExecutorFactory = new ActionExecutorFactory();
+        actionExecutor = actionExecutorFactory.getActionExecutor("PRINTLINEEXECUTOR");
+    }
 
-    }
-    private boolean checkInitialErrorMatch(String testline) {
-        // check the testline with error regex
+    /**
+     * This method checks whether current testLine is match with Error regex.
+     * @param testLine the line.
+     * @return  boolean - true if matches.
+     */
+    private boolean checkInitialErrorMatch(String testLine) {
+
         pattern = Pattern.compile(generalErrorRegex);
-        matcher = pattern.matcher(testline);
+        matcher = pattern.matcher(testLine);
         return matcher.find();
     }
-    private boolean checkInitialInfoMatch(String testline) {
-        // check the testline with info regex
+
+    /**
+     * This method checks whether current testLine is match with Info regex.
+     * @param testLine the line.
+     * @return  boolean - true if matches.
+     *
+     */
+    private boolean checkInitialInfoMatch(String testLine) {
+
         pattern = Pattern.compile(generalInfoRegex);
-        matcher = pattern.matcher(testline);
+        matcher = pattern.matcher(testLine);
         return matcher.find();
     }
-    public void validateTestline(String testline) {
-        //this method is used to validate the test line
-        if (hasEngineApproved) {
-            if (checkInitialInfoMatch(testline)) {
+
+    /**
+     * This method checks whether the current line is error line or not.
+     * Based on the hasEngineApproved boolean parameter this method appends line
+     * @param testLine the current line.
+     */
+    public void validateTestline(String testLine) {
+
+        if (hasEngineApproved) { // previous lines were approved by the engine.
+            if (checkInitialInfoMatch(testLine)) {
+                // Check whether current line is InfoLine.
+                // If so switch the boolean parameter into false and execute collected logLine.
                 hasEngineApproved = false;
-                System.out.print(logLine);
-                actionExecutorConnector.zipfileexecution(logLine);
+                actionExecutor.execute(logLine);
 
             } else {
                 //hasEngineApproved remain true
-                
-                logLine = logLine.append(testline);
-
+                //current line also error line append it to logLine.
+                logLine = logLine.append(testLine);
                 //what if command end in parse mode how to get Log line???
             }
 
 
-        } else {
-            if (checkInitialErrorMatch(testline)) {
+        } else { // previous lines were not approved by engine.
+            if (checkInitialErrorMatch(testLine)) {
+                // Check whether current line is error line.
+                // If so switch the boolean parameter into true and create new string builder.
                 hasEngineApproved = true;
                 logLine = new StringBuilder();
-                logLine = logLine.append(testline);
+                logLine = logLine.append(testLine);
 
 
             }

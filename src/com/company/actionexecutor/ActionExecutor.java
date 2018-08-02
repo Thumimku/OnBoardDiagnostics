@@ -19,10 +19,23 @@ package com.company.actionexecutor;
 
 /**
  * This Interface is used to abstract the execute method for various executors.
+ * Executor classes can use this interface by implementation.
+ *
+ * Public class PrintLineExecutor implements ActionExecutor{
+ *     public void execute(StringBuilder logLine) {
+ *         System.out.print(logLine + "\n");
+ *     }
+ * }
+ *
+ * Factory design pattern is used to create executors referenced by ActionExecutor interface and run execute
+ * @see ActionExecutorFactory
  * @author thumilan@wso2.com
  */
 
  public interface ActionExecutor {
-
+    /**
+     * This method called by executor to do the execution.
+     * @param logLine the line
+     */
     void execute(StringBuilder logLine);
 }

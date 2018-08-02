@@ -18,19 +18,35 @@ package com.company.actionexecutor;
  */
 
 /**
- * This Factory class used to implement the Factory design pattern.
+ * This Factory class used to create various Executors using Factory Design pattern.
+ * Ex:-
+ * ActionExecutorFactory actionExecutorFactory = new ActionExecutorFactory();
+ * ActionExecutor actionExecutor = actionExecutorFactory.getActionExecutor("Printlineececutor");
+ * Now you created printLineExecutor instance.
+ * 
+ * @see ActionExecutor
  * @author thumilan@wso2.com
  */
 public class ActionExecutorFactory {
-    //this factory is used to create various action executor class objects.
-    protected ActionExecutor getActionExecutor(String executorType) {
-        if (executorType == null) {
+
+    /**
+     * This Method used to create Executor objects.
+     * 
+     * @param executorType the executor type.
+     * @return ActionExecutor
+     */
+    public ActionExecutor getActionExecutor(String executorType) {
+
+        if (executorType == null) { // input string is null so method returs null object
             return null;
         } else if (executorType.equalsIgnoreCase("PRINTLINEEXECUTOR")) {
+            // check the input string and return printLineExecutor instance
             return PrintLineExecutor.getInstance();
         } else if (executorType.equalsIgnoreCase("zipfileexecutor")) {
+            // check the input string and return zipLineExecutor instance
             return ZipFileExecutor.getInstance();
         } else {
+            // if input string doesn't match any above cases, invalid input return null.
             return null;
         }
 

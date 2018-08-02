@@ -18,23 +18,42 @@ package com.company.actionexecutor;
  */
 
 /**
- * This class used to print the log lines in the console.
+ * PrintLineExecutor used to print the logLines into the console.
+ * Currently this class designed as a Singleton class inorder to optimise CPU usage.
+ * Further research is required to change the design.
+ *
+ * ActionExecutor interface is implemented for code reuse.
+ * @see ActionExecutor
  * @author thumilan@wso2.com
  */
 public class PrintLineExecutor implements ActionExecutor {
-    private static PrintLineExecutor printLineExecutor;
+
+    private static PrintLineExecutor printLineExecutor; // static instance for singleton method.
+
+    /**
+     * private Constructor.
+     */
     private PrintLineExecutor() {
     }
-    //User to create singleton printline executor
+
+    /**
+     * Singleton method used to create object.
+     * @return PrintLineExecutor
+     */
     public static synchronized PrintLineExecutor getInstance() {
-        if (printLineExecutor == null) {
+
+        if (printLineExecutor == null) { // return new instance if current object is null.
             printLineExecutor = new PrintLineExecutor();
         }
         return printLineExecutor;
     }
-    //override method used to print the logLine
+
+    /**
+     * override method used to print the logLines.
+     * @param logLine the line
+     */
     @Override
     public void execute(StringBuilder logLine) {
-        System.out.print(logLine);
+        System.out.print(logLine + "\n");
     }
 }
