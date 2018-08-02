@@ -37,7 +37,7 @@ import java.util.regex.Pattern;
     private Matcher matcher;
     private Boolean hasEngineApproved; // check whether the line is eligible or not
 
-    private StringBuilder logLine; // stringBuilder used to build logLine
+    private LogLine logLine; // LogLine object initiated
 
     private ActionExecutorFactory actionExecutorFactory; // actionExecutorFactory to create executor objects
 
@@ -88,12 +88,12 @@ import java.util.regex.Pattern;
                 // Check whether current line is InfoLine.
                 // If so switch the boolean parameter into false and execute collected logLine.
                 hasEngineApproved = false;
-                actionExecutor.execute(logLine);
+                actionExecutor.execute(logLine.getData());
 
             } else {
                 //hasEngineApproved remain true
                 //current line also error line append it to logLine.
-                logLine = logLine.append(testLine);
+                logLine.buildLogLine(testLine);
                 //what if command end in parse mode how to get Log line???
             }
 
@@ -103,8 +103,8 @@ import java.util.regex.Pattern;
                 // Check whether current line is error line.
                 // If so switch the boolean parameter into true and create new string builder.
                 hasEngineApproved = true;
-                logLine = new StringBuilder();
-                logLine = logLine.append(testLine);
+                logLine = new LogLine(testLine);
+
 
 
             }
