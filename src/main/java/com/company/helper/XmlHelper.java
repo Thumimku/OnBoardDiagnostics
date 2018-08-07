@@ -34,8 +34,6 @@ import javax.xml.parsers.ParserConfigurationException;
  */
 public class XmlHelper {
 
-    //Initiate DocumentBuilderFactory
-    private DocumentBuilderFactory documentBuilderFactory;
     //Initiate DocumentBuilder
     private DocumentBuilder documentBuilder;
     //Initiate Configure xml Document
@@ -47,7 +45,8 @@ public class XmlHelper {
     public XmlHelper() {
 
         try {
-            documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            //Initiate DocumentBuilderFactory
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             documentBuilder = documentBuilderFactory.newDocumentBuilder();
             normaliseRegexFile();
             normaliseconfFile();
@@ -58,9 +57,10 @@ public class XmlHelper {
 
 
     //Address the Configure xml file
-    private final File confFile = new File(System.getProperty("user.dir") + "/conf/wso2conf.xml");
+
+    File confFile = new File(System.getProperty("user.dir") + "/src/main/resources/wso2conf.xml");
     //Address the pattern xml file
-    private final File patternFile = new File(System.getProperty("user.dir") + "/conf/RegExPattern.xml");
+    File patternFile = new File(System.getProperty("user.dir") + "/src/main/resources/RegExPattern.xml");
 
     /**
      * This method used to normalise the conf file.
@@ -70,9 +70,9 @@ public class XmlHelper {
         try {
             confDocument = documentBuilder.parse(confFile);
             confDocument.getDocumentElement().normalize();
-        } catch (SAXException e) {
-            // Ignore
         } catch (IOException e) {
+            // Inore
+        } catch (SAXException e) {
             // Ignore
         }
 
@@ -95,7 +95,7 @@ public class XmlHelper {
     }
 
     /**
-     * Used to get path of wso2 carbon log file
+     * Used to get path of wso2 carbon log file.
      *
      * @return String - Path of WSO2carbon.log
      */

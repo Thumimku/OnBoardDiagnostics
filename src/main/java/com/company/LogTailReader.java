@@ -17,12 +17,13 @@ package com.company;
  *  under the License.
  */
 
+
 import com.company.logtailer.TailerListenerAdapter;
 
 /**
  * This class is used to handle the line which pass from Tailer class.
  *
- * @see com.company.logtailer.Tailer
+ * @see TailerListenerAdapter
  * @see TailerListenerAdapter
  * @author thumilan@wso2.com
  */

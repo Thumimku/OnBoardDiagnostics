@@ -48,7 +48,7 @@ public class ZipFileExecutor implements ActionExecutor {
      * Singleton method used to create object.
      * @return PrintLineExecutor
      */
-    public static synchronized ZipFileExecutor getInstance() {
+     static synchronized ZipFileExecutor getInstance() {
 
         if (zipFileExecutor == null) { // Return new instance if current object is null.
             zipFileExecutor = new ZipFileExecutor();

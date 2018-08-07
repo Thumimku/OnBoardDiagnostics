@@ -17,9 +17,11 @@ package com.company;
  *  specific language governing permissions and limitations
  *  under the License.
  */
+
 import com.company.actionexecutor.ActionExecutor;
 import com.company.actionexecutor.ActionExecutorFactory;
 import com.company.helper.XmlHelper;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,7 +39,7 @@ import java.util.regex.Pattern;
     private Matcher matcher;
     private Boolean hasEngineApproved; // check whether the line is eligible or not
 
-    private LogLine logLine; // LogLine object initiated
+    private StringBuilder logLine; // LogLine object initiated
 
     private ActionExecutorFactory actionExecutorFactory; // actionExecutorFactory to create executor objects
 
@@ -48,7 +50,7 @@ import java.util.regex.Pattern;
         generalInfoRegex = new XmlHelper().getGeneralInfoRegEx();
         generalErrorRegex = new XmlHelper().getGeneralErrorRegEx();
         actionExecutorFactory = new ActionExecutorFactory();
-        actionExecutor = actionExecutorFactory.getActionExecutor("PRINTLINEEXECUTOR");
+        actionExecutor = actionExecutorFactory.getActionExecutor("zipfileexecutor");
     }
 
     /**
@@ -88,12 +90,12 @@ import java.util.regex.Pattern;
                 // Check whether current line is InfoLine.
                 // If so switch the boolean parameter into false and execute collected logLine.
                 hasEngineApproved = false;
-                actionExecutor.execute(logLine.getData());
+                actionExecutor.execute(logLine);
 
             } else {
                 //hasEngineApproved remain true
                 //current line also error line append it to logLine.
-                logLine.buildLogLine(testLine);
+                logLine.append(testLine);
                 //what if command end in parse mode how to get Log line???
             }
 
@@ -103,7 +105,8 @@ import java.util.regex.Pattern;
                 // Check whether current line is error line.
                 // If so switch the boolean parameter into true and create new string builder.
                 hasEngineApproved = true;
-                logLine = new LogLine(testLine);
+                logLine = new StringBuilder();
+                logLine.append(testLine);
 
 
 

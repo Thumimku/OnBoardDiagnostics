@@ -40,7 +40,7 @@ public class PrintLineExecutor implements ActionExecutor {
      * Singleton method used to create object.
      * @return PrintLineExecutor
      */
-    public static synchronized PrintLineExecutor getInstance() {
+    static synchronized PrintLineExecutor getInstance() {
 
         if (printLineExecutor == null) { // return new instance if current object is null.
             printLineExecutor = new PrintLineExecutor();
