@@ -24,4 +24,10 @@ Inorder to run the application first program needs wsocarbon.log path and wso2ca
 - Set wso2carbon.pid path
   - open wso2conf.xml (src/resources/wsp2conf.xml)
   - Replace the path with your wso2carbon.pid file path (<IS_HOME>/wso2carbon.pid)
+Check whether your wso2server folder grant `read access` for `others`
 
+## Run the Application
+
+- Run `OnBoardDiagnostics.jar`.
+- Run wso2server
+- If there any error occurs thread dumps and log line are zipped in Log folder.
