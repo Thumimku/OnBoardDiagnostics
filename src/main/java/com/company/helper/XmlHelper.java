@@ -105,6 +105,16 @@ public class XmlHelper {
     }
 
     /**
+     * Used to get path of wso2 java pid.
+     *
+     * @return String - Path of wso2carbon.pid
+     */
+    public String getPidFilePath() {
+
+        return confDocument.getElementsByTagName("pidpath").item(0).getTextContent();
+    }
+
+    /**
      * Used to get general error regex pattern.
      *
      * @return String - general error Regex pattern

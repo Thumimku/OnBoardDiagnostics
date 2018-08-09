@@ -53,7 +53,7 @@ public class PrintLineExecutor implements ActionExecutor {
      * @param logLine the line
      */
     @Override
-    public void execute(StringBuilder logLine) {
+    public void execute(StringBuilder logLine, String path) {
         System.out.print(logLine + "\n");
     }
 }

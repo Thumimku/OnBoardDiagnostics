@@ -21,7 +21,6 @@ package com.company;
 import com.company.helper.XmlHelper;
 import com.company.logtailer.Tailer;
 import com.company.logtailer.TailerListener;
-
 import java.io.File;
 
 
@@ -35,9 +34,7 @@ public class Main {
         File file =  new File (new XmlHelper().getLogFilePath());
         Thread tailer = new Tailer(file, logTailReader);
         tailer.run();
-
-
-
+       
 
     }
 }

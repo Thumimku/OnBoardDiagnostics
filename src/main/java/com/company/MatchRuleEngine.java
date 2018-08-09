@@ -18,8 +18,6 @@ package com.company;
  *  under the License.
  */
 
-import com.company.actionexecutor.ActionExecutor;
-import com.company.actionexecutor.ActionExecutorFactory;
 import com.company.helper.XmlHelper;
 
 import java.util.regex.Matcher;
@@ -41,22 +39,26 @@ import java.util.regex.Pattern;
 
     private StringBuilder logLine; // LogLine object initiated
 
-    private ActionExecutorFactory actionExecutorFactory; // actionExecutorFactory to create executor objects
+//    private ActionExecutorFactory actionExecutorFactory; // actionExecutorFactory to create executor objects
+//
+//    private ActionExecutor actionExecutor;
 
-    private ActionExecutor actionExecutor;
+    private Interpreter interpreter;
 
     public MatchRuleEngine() {
-        hasEngineApproved = false;
-        generalInfoRegex = new XmlHelper().getGeneralInfoRegEx();
-        generalErrorRegex = new XmlHelper().getGeneralErrorRegEx();
-        actionExecutorFactory = new ActionExecutorFactory();
-        actionExecutor = actionExecutorFactory.getActionExecutor("zipfileexecutor");
+        this.hasEngineApproved = false;
+        this.generalInfoRegex = new XmlHelper().getGeneralInfoRegEx();
+        this.generalErrorRegex = new XmlHelper().getGeneralErrorRegEx();
+//        this.actionExecutorFactory = new ActionExecutorFactory();
+//        this.actionExecutor = actionExecutorFactory.getActionExecutor("zipfileexecutor");
+
     }
 
     /**
      * This method checks whether current testLine is match with Error regex.
+     *
      * @param testLine the line.
-     * @return  boolean - true if matches.
+     * @return boolean - true if matches.
      */
     private boolean checkInitialErrorMatch(String testLine) {
 
@@ -67,9 +69,9 @@ import java.util.regex.Pattern;
 
     /**
      * This method checks whether current testLine is match with Info regex.
-     * @param testLine the line.
-     * @return  boolean - true if matches.
      *
+     * @param testLine the line.
+     * @return boolean - true if matches.
      */
     private boolean checkInitialInfoMatch(String testLine) {
 
@@ -81,6 +83,7 @@ import java.util.regex.Pattern;
     /**
      * This method checks whether the current line is error line or not.
      * Based on the hasEngineApproved boolean parameter this method appends line
+     *
      * @param testLine the current line.
      */
     public void validateTestline(String testLine) {
@@ -90,7 +93,10 @@ import java.util.regex.Pattern;
                 // Check whether current line is InfoLine.
                 // If so switch the boolean parameter into false and execute collected logLine.
                 hasEngineApproved = false;
-                actionExecutor.execute(logLine);
+                if (interpreter != null) {
+                    interpreter.interpret(logLine);
+                }
+
 
             } else {
                 //hasEngineApproved remain true
@@ -107,10 +113,11 @@ import java.util.regex.Pattern;
                 hasEngineApproved = true;
                 logLine = new StringBuilder();
                 logLine.append(testLine);
-
+                interpreter = new Interpreter();
 
 
             }
         }
     }
+
 }

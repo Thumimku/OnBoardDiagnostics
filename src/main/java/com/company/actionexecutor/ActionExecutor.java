@@ -37,5 +37,5 @@ package com.company.actionexecutor;
      * This method called by executor to do the execution.
      * @param logLine the line
      */
-    void execute(StringBuilder logLine);
+    void execute(StringBuilder logLine, String folderpath);
 }
