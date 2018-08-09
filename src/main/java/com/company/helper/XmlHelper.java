@@ -51,7 +51,7 @@ public class XmlHelper {
             normaliseRegexFile();
             normaliseconfFile();
         } catch (ParserConfigurationException e) {
-            // Ignore
+            System.out.print("Unable to parse xml files");
         }
     }
 
@@ -71,9 +71,10 @@ public class XmlHelper {
             confDocument = documentBuilder.parse(confFile);
             confDocument.getDocumentElement().normalize();
         } catch (IOException e) {
-            // Inore
+            System.out.print("Unable to parse wso2 conf xml file. Please Check the path and permission to access the file.");
         } catch (SAXException e) {
-            // Ignore
+            System.out.print("Unable to parse wso2 conf xml file. Please Check the path and permission to access the file.");
+
         }
 
 
@@ -88,9 +89,11 @@ public class XmlHelper {
             regexDocument = documentBuilder.parse(patternFile);
             regexDocument.getDocumentElement().normalize();
         } catch (SAXException e) {
-            //Ignore
+            System.out.print("Unable to parse regex xml file. Please Check the path and permission to access the file.");
+
         } catch (IOException e) {
-            //Ignore
+            System.out.print("Unable to parse regex xml file. Please Check the path and permission to access the file.");
+
         }
     }
 

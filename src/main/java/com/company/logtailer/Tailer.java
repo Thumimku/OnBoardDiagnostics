@@ -348,90 +348,11 @@ public class Tailer extends Thread {
             buffer.clear();
             return fileChannel.position();
         } catch (IOException e) {
-            System.out.print(e.getMessage());
+            System.out.print("Unable to read from the log file due to : " + e.getMessage());
         }
         return read;
     }
 
-    private void readFromBuffer(long read) {
-        buffer.flip();
-        while (buffer.hasRemaining()) {
-            String charString = String.valueOf((char) buffer.get());
-            logLine = logLine + charString;
-            if (charString.compareTo("\n") == 0) {
-                listener.handle(logLine);
-                logLine = "";
-
-
-            }
-
-        }
-
-        buffer.clear();
-    }
-
-    /**
-     * Read lines from the buffer of given size.
-     *
-     * @param size The buffer size.
-     * @throws IOException if an I/O error occurs.
-     */
-    private void readLinesFromBuffer(long size) {
-        int read = 0;
-            read = readLineFromBuffer(0, size);
-
-            int pos = read;
-            while (pos < size) {
-                read = readLineFromBuffer(pos, size);
-                pos += read;
-            }
-    }
-
-    /**
-     * Buffered read line.
-     *
-     * @param start the buffer starting index.
-     * @param size  The buffer size.
-     * @return Number of bytes read.
-     * @throws IOException if an I/O error occurs.
-     */
-    private int readLineFromBuffer(int start, long size)  {
-        int read = 0;
-        int current = start;
-        String ch = "";
-        char charecter = 0;
-        boolean eol = false;
-        boolean seenCR = false;
-        buffer.flip();
-        while (current < size && !eol) {
-            charecter = (char) buffer.get();
-
-            ch = String.valueOf(charecter);
-            System.out.print(ch);
-            read++;
-            current++;
-            switch (ch) {
-                case "\n":
-                    eol = true;
-                    break;
-                case "\r":
-                    seenCR = true;
-                    break;
-                default:
-                    if (seenCR) {
-                        remaind[remaindIndex++] = '\r';
-                        seenCR = false;
-                    }
-                    remaind[remaindIndex++] = charecter; // add character, not its ascii value
-            }
-        }
-        if (eol) {
-            listener.handle(new String(remaind, 0, remaindIndex));
-            remaindIndex = 0;
-        }
-        buffer.clear();
-        return read;
-    }
 
     private void closeQuietly(Closeable closeable) {
         try {
@@ -439,7 +360,7 @@ public class Tailer extends Thread {
                 closeable.close();
             }
         } catch (IOException ioe) {
-            // ignore
+            System.out.print("Unable to close the file due to : " + ioe.getMessage());
         }
     }
 

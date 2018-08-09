@@ -27,23 +27,38 @@ import java.io.File;
 import java.sql.Timestamp;
 
 /**
+ * Whenever there is error occur in Wso2server MatchRuleEngine detects it.
+ * It invokes the methods of this class's instance.
+ * This class is used to interpret the error and do appropriate actions for that error.
  *
+ * Example error scenario :-
+ *      When adn error occurs interpreter instance create a new folder name as current Time stamp.
+ *      Then let threadDumper do thread dumper in that folder.
+ *      Then invoke zip execution to write logLine in the folder and zip it.
+ *
+ * @see MatchRuleEngine
+ * @see ThreadDumper
+ * @see com.company.actionexecutor.ZipFileExecutor
  * @author thumilan@wso2.com
  */
 public class Interpreter {
 
     private ActionExecutorFactory actionExecutorFactory; // actionExecutorFactory to create executor objects
 
-    private ActionExecutor actionExecutor;
+    private ActionExecutor actionExecutor; // action execute instance to execute actions
 
-    private String foldername;
+    private String foldername; // folder name of a collective thread dumps (TimpStamp)
 
-    private String folderpath;
+    private String folderpath; // folder path of the TimeStamp Folder
 
-    private Boolean folderexists;
+    private Boolean folderexists; //  check whether folder exists or not.
 
 
-
+    /**
+     * public Constructor.
+     * Current action executor is set as zipFile executor
+     * This constructor calls createFolder to create the Thread Dump folder and do thread dump.
+     */
     public Interpreter() {
         this.actionExecutorFactory = new ActionExecutorFactory();
         this.actionExecutor = actionExecutorFactory.getActionExecutor("zipfileexecutor");
@@ -52,18 +67,30 @@ public class Interpreter {
 
     }
 
-    public void interpret(StringBuilder logLine){
+    /**
+     * Method used to interpret logLine.
+     * Here fodler path is abstracted from MatchRule Engine
+     * @param logLine
+     */
+    public void interpret(StringBuilder logLine) {
+
         actionExecutor.execute(logLine, folderpath);
     }
 
+    /**
+     * Create folder for collective thread dump.
+     */
     private void createFolder() {
-        folderexists = false;
-        folderpath = (System.getProperty("user.dir") + "/log/");
+
+        folderexists = false; // Initially fileexists flag set as false
+        folderpath = (System.getProperty("user.dir") + "/log/"); // get log file path
+
+        // folder name set as timestamp
         foldername = new Timestamp(System.currentTimeMillis()).toString().replace(" ", "_");
         File dumpFolder = new File(folderpath + foldername);
         if (!dumpFolder.exists()) {
             try {
-                dumpFolder.mkdir();
+                dumpFolder.mkdir(); // create folder if not exists.
                 folderexists = true;
                 folderpath = folderpath + foldername;
             } catch (SecurityException se) {
@@ -75,6 +102,10 @@ public class Interpreter {
         }
     }
 
+    /**
+     * This method create ThreadDumper instance and do thread dump.
+     * java process of wso2 server is referenced as ServerProcess
+     */
     private void dothreaddump() {
         ThreadDumper threadDumper = new ThreadDumper(ServerProcess.getInstance().getProcessId());
         threadDumper.doThreadDumping(folderpath);

@@ -22,6 +22,12 @@ import java.io.File;
 import java.io.IOException;
 
 /**
+ * ThreadDumper class is used to do thread dump for given process.
+ * This Process was referenced by ServerProcess class.
+ * @see ServerProcess
+ *
+ * This class use Java Runtinme enviroment and jstack command to do thread dump.
+ *
  *
  * @author thumilan@wso2.com
  */
@@ -85,14 +91,16 @@ public class ThreadDumper {
 
 
     }
-    public synchronized void createFolder(){
 
-    }
-
+    /**
+     * Method used to do thread dump with using Java Runtime Environment and jstack command.
+     * Currently its written for linux environment.
+     * @param filepath
+     */
     public void doThreadDumping(String filepath) {
 
 
-        if (new File(filepath).exists()) {
+        if (new File(filepath).exists()) { // check whether file exists before dumping.
             String stackframe = "jstack -l " + processid + " > " + filepath;
 
             for (int counter = threadDumpCount; counter > 0; counter--) {
@@ -109,7 +117,7 @@ public class ThreadDumper {
                 } catch (IOException e) {
                     System.out.print("Unable to do thread dump for " + processid);
                 } catch (InterruptedException e) {
-
+                    System.out.print("Unable to do wait dealy time due to : " + e.getMessage());
                 }
 
             }

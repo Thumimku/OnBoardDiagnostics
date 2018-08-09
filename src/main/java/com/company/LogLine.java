@@ -21,7 +21,7 @@ package com.company;
 
 /**
  *This class used to represent the logLine.
- *
+ * Currently not used.
  * @author thumilan@wso2.com
  */
 public class LogLine {

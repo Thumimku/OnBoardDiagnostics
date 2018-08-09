@@ -24,7 +24,7 @@ import java.io.RandomAccessFile;
 
 
 /**
- * This class is used to represent the wso2carbon server process.
+ * This class is used to represent the java process of wso2carbon server.
  * This class is designed as singleton because there is only one process exists while running this tool
  *
  * @author thumilan@wso2.com
@@ -71,12 +71,16 @@ public class ServerProcess {
         return processId;
     }
 
+    /**
+     * Method used to check whether process is alive or not.
+     * @return Boolean isAlive()
+     */
     public boolean isAlive() {
         try {
 
              return (Runtime.getRuntime().exec("ps " + processId).isAlive());
         } catch (IOException e) {
-
+                System.out.print("Unable to check the process state.");
         }
         return false;
     }

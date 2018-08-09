@@ -59,7 +59,7 @@ public class ZipFileExecutor implements ActionExecutor {
     }
 
     /**
-     * override method used to print the logLines.
+     * This method is used to write the log line into destination file and zip the folder.
      * @param logLine the line
      */
     @Override
@@ -76,53 +76,42 @@ public class ZipFileExecutor implements ActionExecutor {
         try {
             zipFolder(path, logDirpath + folder.getName() + ".zip");
         } catch (Exception e) {
-
+            System.out.print("Unable to zip the file at " + path);
         }
 
-
-
-//        String logFilepath =  new Timestamp(System.currentTimeMillis()).toString(); //Get current time stamp
-//
-//        //Set the location of the zip file
-//        String zipLogFilepath = logDirpath.concat(logFilepath).concat(logFilepath.concat(".zip"));
-//
-//        String txtLogFilepath = logFilepath.concat(".txt"); //Set the text file path into the zip file
-//        try {
-//            // FileOutputStream to create zipFile
-//            FileOutputStream fileOutputStream = new FileOutputStream(zipLogFilepath);
-//            // ZipOutputStream to create zipFile
-//            ZipOutputStream zipOutputStream = new ZipOutputStream(fileOutputStream);
-//            // Create text file path into the zip file
-//            zipOutputStream.putNextEntry(new ZipEntry(txtLogFilepath));
-//
-//            byte[] bytes = logLine.toString().getBytes(); // Change logLine into byte array.
-//            zipOutputStream.write(bytes , 0 , bytes.length);
-//            zipOutputStream.closeEntry();
-//            zipOutputStream.close();
-//
-//        } catch (IOException e) {
-//            // Ignore
-//        }
-
-
     }
-    public void zipFolder(String srcFolder, String destZipFile) throws Exception {
+
+    /**
+     * Method used to zip folder.
+     * @param srcFolder file which needed to zip.
+     * @param destZipFile destination path of zip folder.
+     * @throws Exception
+     */
+    private void zipFolder(String srcFolder, String destZipFile) throws Exception {
         ZipOutputStream zip = null;
         FileOutputStream fileWriter = null;
 
-        fileWriter = new FileOutputStream(destZipFile);
+        fileWriter = new FileOutputStream(destZipFile); // set file output stream
         zip = new ZipOutputStream(fileWriter);
 
         addFolderToZip("", srcFolder, zip);
         zip.flush();
         zip.close();
     }
+
+    /**
+     * Method used to zip file.
+     * @param path destination path of the file
+     * @param srcFile source path of the file which need to zip
+     * @param zip ZipOutputStream
+     * @throws Exception
+     */
     private void addFileToZip(String path, String srcFile, ZipOutputStream zip)
             throws Exception {
 
         File folder = new File(srcFile);
         if (folder.isDirectory()) {
-            addFolderToZip(path, srcFile, zip);
+            addFolderToZip(path, srcFile, zip); // if current file is directory do zip folder.
         } else {
             byte[] buf = new byte[1024];
             int len;
@@ -133,6 +122,14 @@ public class ZipFileExecutor implements ActionExecutor {
             }
         }
     }
+
+    /**
+     * Mehtod used to zip folder.
+     * @param path destination  path of the folder.
+     * @param srcFolder source path of the folder.
+     * @param zip ZipOutputStream
+     * @throws Exception
+     */
     private void addFolderToZip(String path, String srcFolder, ZipOutputStream zip)
             throws Exception {
         File folder = new File(srcFolder);

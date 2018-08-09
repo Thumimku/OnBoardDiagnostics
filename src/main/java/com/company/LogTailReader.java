@@ -29,15 +29,6 @@ import com.company.logtailer.TailerListenerAdapter;
  */
 public class LogTailReader extends TailerListenerAdapter {
 
-    //Initiate Log file path
-    //private String logFilePath;
-    //Initiate logFile length
-    //private Long logFileLength;
-    //Initiate int charRead
-    //private int charRead;
-    //Initiate Line Builder;
-    //private String lineBuilder;
-
 
     //Initiate MatchRule Engine
     private final MatchRuleEngine matchRuleEngine;
