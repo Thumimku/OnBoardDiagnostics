@@ -83,7 +83,7 @@ public class Interpreter {
     private void createFolder() {
 
         folderexists = false; // Initially fileexists flag set as false
-        folderpath = (System.getProperty("user.dir") + "/log/"); // get log file path
+        folderpath = (System.getProperty("user.dir") + "/src/main/resources/log/"); // get log file path
 
         // folder name set as timestamp
         foldername = new Timestamp(System.currentTimeMillis()).toString().replace(" ", "_");

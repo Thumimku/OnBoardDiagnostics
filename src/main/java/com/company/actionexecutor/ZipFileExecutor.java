@@ -44,7 +44,7 @@ public class ZipFileExecutor implements ActionExecutor {
     }
 
 
-    private String logDirpath = (System.getProperty("user.dir") + "/Zip/"); //Refers the log Folder.
+    private String logDirpath = (System.getProperty("user.dir") + "/src/main/resources/Zip/"); //Refers the log Folder.
 
     /**
      * Singleton method used to create object.
