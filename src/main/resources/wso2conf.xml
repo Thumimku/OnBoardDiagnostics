@@ -1,4 +1,5 @@
 <conf>
     <!--WSO2 carbon log file  <IS_HOME>/repository/logs/wso2carbon.log-->
     <path>/home/thumilan/WSO2/IS 5.6.0/wso2is-5.6.0/repository/logs/wso2carbon.log</path>
+    <pidpath>/home/thumilan/WSO2/IS 5.6.0/wso2is-5.6.0/wso2carbon.pid</pidpath>
 </conf>

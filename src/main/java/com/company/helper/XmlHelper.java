@@ -34,8 +34,6 @@ import javax.xml.parsers.ParserConfigurationException;
  */
 public class XmlHelper {
 
-    //Initiate DocumentBuilderFactory
-    private DocumentBuilderFactory documentBuilderFactory;
     //Initiate DocumentBuilder
     private DocumentBuilder documentBuilder;
     //Initiate Configure xml Document
@@ -47,20 +45,22 @@ public class XmlHelper {
     public XmlHelper() {
 
         try {
-            documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            //Initiate DocumentBuilderFactory
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             documentBuilder = documentBuilderFactory.newDocumentBuilder();
             normaliseRegexFile();
             normaliseconfFile();
         } catch (ParserConfigurationException e) {
-            // Ignore
+            System.out.print("Unable to parse xml files");
         }
     }
 
 
     //Address the Configure xml file
-    private final File confFile = new File(System.getProperty("user.dir") + "/conf/wso2conf.xml");
+
+    File confFile = new File(System.getProperty("user.dir") + "/src/main/resources/wso2conf.xml");
     //Address the pattern xml file
-    private final File patternFile = new File(System.getProperty("user.dir") + "/conf/RegExPattern.xml");
+    File patternFile = new File(System.getProperty("user.dir") + "/src/main/resources/RegExPattern.xml");
 
     /**
      * This method used to normalise the conf file.
@@ -70,10 +70,11 @@ public class XmlHelper {
         try {
             confDocument = documentBuilder.parse(confFile);
             confDocument.getDocumentElement().normalize();
-        } catch (SAXException e) {
-            // Ignore
         } catch (IOException e) {
-            // Ignore
+            System.out.print("Unable to parse wso2 conf xml file. Please Check the path and permission to access the file.");
+        } catch (SAXException e) {
+            System.out.print("Unable to parse wso2 conf xml file. Please Check the path and permission to access the file.");
+
         }
 
 
@@ -88,20 +89,32 @@ public class XmlHelper {
             regexDocument = documentBuilder.parse(patternFile);
             regexDocument.getDocumentElement().normalize();
         } catch (SAXException e) {
-            //Ignore
+            System.out.print("Unable to parse regex xml file. Please Check the path and permission to access the file.");
+
         } catch (IOException e) {
-            //Ignore
+            System.out.print("Unable to parse regex xml file. Please Check the path and permission to access the file.");
+
         }
     }
 
     /**
-     * Used to get path of wso2 carbon log file
+     * Used to get path of wso2 carbon log file.
      *
      * @return String - Path of WSO2carbon.log
      */
     public String getLogFilePath() {
 
         return confDocument.getElementsByTagName("path").item(0).getTextContent();
+    }
+
+    /**
+     * Used to get path of wso2 java pid.
+     *
+     * @return String - Path of wso2carbon.pid
+     */
+    public String getPidFilePath() {
+
+        return confDocument.getElementsByTagName("pidpath").item(0).getTextContent();
     }
 
     /**

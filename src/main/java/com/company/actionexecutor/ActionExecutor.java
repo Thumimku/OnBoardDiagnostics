@@ -1,4 +1,4 @@
-package com.company;
+package com.company.actionexecutor;
 /*
  * Copyright (c) 2005-2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -17,46 +17,25 @@ package com.company;
  *  under the License.
  */
 
-
-
 /**
- *This class used to represent the logLine.
+ * This Interface is used to abstract the execute method for various executors.
+ * Executor classes can use this interface by implementation.
  *
+ * Public class PrintLineExecutor implements ActionExecutor{
+ *     public void execute(StringBuilder logLine) {
+ *         System.out.print(logLine + "\n");
+ *     }
+ * }
+ *
+ * Factory design pattern is used to create executors referenced by ActionExecutor interface and run execute
+ * @see ActionExecutorFactory
  * @author thumilan@wso2.com
  */
-public class LogLine {
 
-    private StringBuilder data; // this is the actual logLine
-
+ public interface ActionExecutor {
     /**
-     * public Constructor.
-     * @param logLine initial logLine
-     *
+     * This method called by executor to do the execution.
+     * @param logLine the line
      */
-    public LogLine (String logLine) {
-
-        data = new StringBuilder();
-        data.append(logLine);
-    }
-
-    /**
-     * Get method for the data attribute.
-     * @return actual logLine
-     */
-
-    public StringBuilder getData() {
-
-        return data;
-    }
-
-    /**
-     * This method used to build the LogLine.
-     * @param testLine current line processed by MatchRuleEngine
-     */
-    public void buildLogLine(String testLine) {
-
-        if (testLine != null) {
-            data.append(testLine);
-        }
-    }
+    void execute(StringBuilder logLine, String folderpath);
 }

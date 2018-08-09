@@ -17,10 +17,12 @@ package com.company;
  *  under the License.
  */
 
+
 import com.company.helper.XmlHelper;
 import com.company.logtailer.Tailer;
 import com.company.logtailer.TailerListener;
 import java.io.File;
+
 
 /**
  * Typical Java Main class.
@@ -29,9 +31,10 @@ public class Main {
 
     public static void main(String[] args) {
         TailerListener logTailReader = new LogTailReader();
-        File file = new File(new XmlHelper().getLogFilePath());
-        Tailer tailer = new Tailer(file, logTailReader);
+        File file =  new File (new XmlHelper().getLogFilePath());
+        Thread tailer = new Tailer(file, logTailReader);
         tailer.run();
+       
 
     }
 }

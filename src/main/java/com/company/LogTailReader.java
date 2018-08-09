@@ -17,25 +17,17 @@ package com.company;
  *  under the License.
  */
 
+
 import com.company.logtailer.TailerListenerAdapter;
 
 /**
  * This class is used to handle the line which pass from Tailer class.
  *
- * @see com.company.logtailer.Tailer
+ * @see TailerListenerAdapter
  * @see TailerListenerAdapter
  * @author thumilan@wso2.com
  */
 public class LogTailReader extends TailerListenerAdapter {
-
-    //Initiate Log file path
-    //private String logFilePath;
-    //Initiate logFile length
-    //private Long logFileLength;
-    //Initiate int charRead
-    //private int charRead;
-    //Initiate Line Builder;
-    //private String lineBuilder;
 
 
     //Initiate MatchRule Engine

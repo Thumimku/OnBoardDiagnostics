@@ -20,6 +20,8 @@ package com.company.actionexecutor;
 /**
  * This class is used to connect with ActionExecutorFactory.
  * Instead of exposing the actual ActionExecutor this connector helps encapsulate the creation of the object.
+ *
+ * Currently this class is removed from the flow due to redundancy.
  * @author thumilan@wo2.com
  */
 public class ActionExecutorConnector {
@@ -32,10 +34,10 @@ public class ActionExecutorConnector {
     //connect with printExecutor
     public void printexecution(StringBuilder logLine) {
         actionExecutor = actionExecutorFactory.getActionExecutor("PRINTLINEEXECUTOR");
-        actionExecutor.execute(logLine);
+        //actionExecutor.execute(logLine);
     }
     public void zipfileexecution(StringBuilder logLine) {
         actionExecutor = actionExecutorFactory.getActionExecutor("zipfileexecutor");
-        actionExecutor.execute(logLine);
+        //actionExecutor.execute(logLine);
     }
 }
