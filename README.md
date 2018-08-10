@@ -32,4 +32,4 @@ Check whether your wso2server folder grant `read access` for `others`
 - Run wso2server
 - If there any error occurs thread dumps and log line are zipped in Log folder.
 
-Sample Thread dump and error log line is in `src/resources/log`
+Sample Thread dump and error log line is in `src/main/resources/log`
