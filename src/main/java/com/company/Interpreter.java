@@ -107,7 +107,7 @@ public class Interpreter {
      * java process of wso2 server is referenced as ServerProcess
      */
     private void dothreaddump() {
-        ThreadDumper threadDumper = new ThreadDumper(ServerProcess.getInstance().getProcessId());
+        ThreadDumper threadDumper = new ThreadDumper(new ServerProcess().getProcessId());
         threadDumper.doThreadDumping(folderpath);
     }
 }

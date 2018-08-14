@@ -25,50 +25,39 @@ import java.io.RandomAccessFile;
 
 /**
  * This class is used to represent the java process of wso2carbon server.
- * This class is designed as singleton because there is only one process exists while running this tool
  *
  * @author thumilan@wso2.com
  */
 public class ServerProcess {
 
-    //private singleton serverProcess
-    private static ServerProcess serverProcess;
+
     //private process id
     private String processId;
 
     /**
-     * Private constructor.
+     * Public constructor.
      *
      */
-    private ServerProcess() {
+    public ServerProcess() {
         RandomAccessFile file = null;
         try {
             // read the process id from the wso2carbon.pid file
             file = new RandomAccessFile(new XmlHelper().getPidFilePath(), "r");
-            processId = file.readLine();
+            this.processId = file.readLine();
         } catch (IOException e) {
             System.out.print("wso2carbon.pid file is Not Found.");
             System.out.print("Please Check the Access Permission and pidpath in wso2conf.xml");
         }
     }
 
-    /**
-     * Static method for get singleton object.
-     * @return ServerProcess singleton Object
-     */
-    public static synchronized ServerProcess getInstance() {
-        if (serverProcess == null) {
-            serverProcess = new ServerProcess();
-        }
-        return serverProcess;
-    }
+
 
     /**
      * Getter method for processId.
      * @return String processId
      */
     public String getProcessId() {
-        return processId;
+        return this.processId;
     }
 
     /**
