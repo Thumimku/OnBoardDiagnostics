@@ -8,6 +8,8 @@ This tool is designed to diagnose errors and malicious flows in WSO2-Identity Se
 
 1. Java 8
 2. IDE (Inteillj - not necessary )
+3. Maven
+4. WSO2 IS Server
 
 ## Current Progress
 
