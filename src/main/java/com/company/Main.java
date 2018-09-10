@@ -30,6 +30,7 @@ import java.io.File;
 public class Main {
 
     public static void main(String[] args) {
+        System.out.print("welcome to OnBoard Diagnostics Tool For WSO2 IS");
         TailerListener logTailReader = new LogTailReader();
         File file =  new File (new XmlHelper().getLogFilePath());
         Thread tailer = new Tailer(file, logTailReader);

@@ -19,7 +19,6 @@ package com.company;
  */
 
 import com.company.helper.XmlHelper;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,6 +32,9 @@ import java.util.regex.Pattern;
 
     private String generalErrorRegex; // general error regex
     private String generalInfoRegex; // general info regex
+    private String oomErrorRegex; // oom error regex
+    private XmlHelper xmlHelper; // initiate XmlHelper
+    private Interpreter interpreter; // initiate Interpreter
     private Pattern pattern;
     private Matcher matcher;
     private Boolean hasEngineApproved; // check whether the line is eligible or not
@@ -43,14 +45,14 @@ import java.util.regex.Pattern;
 //
 //    private ActionExecutor actionExecutor;
 
-    private Interpreter interpreter;
 
     public MatchRuleEngine() {
+        this.xmlHelper = new XmlHelper();
         this.hasEngineApproved = false;
-        this.generalInfoRegex = new XmlHelper().getGeneralInfoRegEx();
-        this.generalErrorRegex = new XmlHelper().getGeneralErrorRegEx();
-//        this.actionExecutorFactory = new ActionExecutorFactory();
-//        this.actionExecutor = actionExecutorFactory.getActionExecutor("zipfileexecutor");
+        this.generalInfoRegex = xmlHelper.getGeneralInfoRegEx();
+        this.generalErrorRegex = xmlHelper.getGeneralErrorRegEx();
+        this.oomErrorRegex = xmlHelper.getOomErrorRegEx();
+        this.interpreter = new Interpreter();
 
     }
 
@@ -81,6 +83,19 @@ import java.util.regex.Pattern;
     }
 
     /**
+     * This method checks whether current testLine is match with Oom error regex.
+     *
+     * @param testLine the line.
+     * @return boolean - true if matches.
+     */
+    private boolean checkOomErrorMatch(String testLine) {
+
+        pattern = Pattern.compile(oomErrorRegex);
+        matcher = pattern.matcher(testLine);
+        return matcher.find();
+    }
+
+    /**
      * This method checks whether the current line is error line or not.
      * Based on the hasEngineApproved boolean parameter this method appends line
      *
@@ -89,6 +104,16 @@ import java.util.regex.Pattern;
     public void validateTestline(String testLine) {
 
         if (hasEngineApproved) { // previous lines were approved by the engine.
+
+            if (checkInitialErrorMatch(testLine)){
+                interpreter.extractRequestID(testLine);
+                interpreter.doDBQueryDump();
+            }
+            if(checkOomErrorMatch(testLine)){
+                //interpreter.doNetstat();
+
+            }
+
             if (checkInitialInfoMatch(testLine)) {
                 // Check whether current line is InfoLine.
                 // If so switch the boolean parameter into false and execute collected logLine.
@@ -113,7 +138,11 @@ import java.util.regex.Pattern;
                 hasEngineApproved = true;
                 logLine = new StringBuilder();
                 logLine.append(testLine);
-                interpreter = new Interpreter();
+                interpreter.createFolder();
+                interpreter.extractRequestID(testLine);
+                interpreter.doDBQueryDump();
+
+
 
 
             }

@@ -1,4 +1,4 @@
-package com.company.threaddumper;
+package com.company.actionexecutor.dumper;
 /*
  * Copyright (c) 2005-2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -19,7 +19,9 @@ package com.company.threaddumper;
 
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Scanner;
 
 /**
  * ThreadDumper class is used to do thread dump for given process.
@@ -95,18 +97,30 @@ public class ThreadDumper {
     /**
      * Method used to do thread dump with using Java Runtime Environment and jstack command.
      * Currently its written for linux environment.
-     * @param filepath
+     * @param folderpath
      */
-    public void doThreadDumping(String filepath) {
+    public void doThreadDumping(String folderpath) {
 
 
-        if (new File(filepath).exists()) { // check whether file exists before dumping.
-            String stackframe = "jstack -l " + processid + " > " + filepath;
+        if (new File(folderpath).exists()) { // check whether file exists before dumping.
+            String commandFrame =  System.getenv("JAVA_HOME") + "/bin/jstack " + processid ;
 
             for (int counter = threadDumpCount; counter > 0; counter--) {
                 try {
-                    String command = System.getenv("JAVA_HOME") + "/bin/" + stackframe + "/td_" + fileSuffix + ".txt";
-                    Runtime.getRuntime().exec(new String []{"bash", "-c", command});
+                    String filepath =   folderpath + "/td_" + fileSuffix + ".txt";
+                    Process process = Runtime.getRuntime().exec(commandFrame);
+                    Scanner scanner = new Scanner(process.getInputStream());
+                    scanner.useDelimiter("\\A");
+                    try {
+                        FileWriter writer = new FileWriter(filepath);
+                        writer.write(scanner.next());
+                        writer.close();
+                    } catch (IOException e) {
+                        System.out.print("Unable to do write in file while thread dumping");
+                    }
+
+                    scanner.close();
+
                     fileSuffix++;
                     synchronized (this) {
                         this.wait(delay);
@@ -115,9 +129,9 @@ public class ThreadDumper {
 
 
                 } catch (IOException e) {
-                    System.out.print("Unable to do thread dump for " + processid);
+                    System.out.print("Unable to do thread dump for " + processid + "\n");
                 } catch (InterruptedException e) {
-                    System.out.print("Unable to do wait dealy time due to : " + e.getMessage());
+                    System.out.print("Unable to do wait delay time due to : " + e.getMessage());
                 }
 
             }

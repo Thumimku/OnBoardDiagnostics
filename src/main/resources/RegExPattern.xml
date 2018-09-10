@@ -1,4 +1,5 @@
 <pattern>
     <GeneralErrorRegex>TID:\ \[(-)\d*\]\ \[\]\ \[\d\d\d\d\-\d\d\-\d\d\ \d\d\:\d\d\:\d\d\,\d+\]\ ERROR</GeneralErrorRegex>
     <GeneralInfoRegex>TID:\ \[(-)\d*\]\ \[\]\ \[\d\d\d\d\-\d\d\-\d\d\ \d\d\:\d\d\:\d\d\,\d+\]\  INFO</GeneralInfoRegex>
+    <OomErrorRegex>Caused\ by:\ java.lang.OutOfMemoryError:</OomErrorRegex>
 </pattern>

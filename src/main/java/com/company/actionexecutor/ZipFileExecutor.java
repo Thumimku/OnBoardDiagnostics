@@ -35,28 +35,23 @@ import java.util.zip.ZipOutputStream;
  */
 public class ZipFileExecutor implements ActionExecutor {
 
-    private static ZipFileExecutor zipFileExecutor; // static instance for singleton method.
 
     /**
-     *private Constructor.
+     *public Constructor.
      */
-    private ZipFileExecutor() {
-    }
+    private String logDirpath = (System.getProperty("user.dir") + "/Zip/"); //Refers the log Folder.
 
+    public ZipFileExecutor() {
 
-    private String logDirpath = (System.getProperty("user.dir") + "/src/main/resources/Zip/"); //Refers the log Folder.
-
-    /**
-     * Singleton method used to create object.
-     * @return PrintLineExecutor
-     */
-     static synchronized ZipFileExecutor getInstance() {
-
-        if (zipFileExecutor == null) { // Return new instance if current object is null.
-            zipFileExecutor = new ZipFileExecutor();
+        File logfolder = new File(logDirpath);
+        if (!(logfolder.exists())) {
+            logfolder.mkdir();
         }
-        return zipFileExecutor;
     }
+
+
+
+
 
     /**
      * This method is used to write the log line into destination file and zip the folder.
@@ -67,7 +62,7 @@ public class ZipFileExecutor implements ActionExecutor {
         File folder = new File(path);
 
         try {
-            FileWriter writer = new FileWriter(path + "/" + folder.getName() + ".txt");
+            FileWriter writer = new FileWriter(path + "/" + folder.getName() + ".txt",true);
             writer.write(logLine.toString());
             writer.close();
         } catch (IOException e) {

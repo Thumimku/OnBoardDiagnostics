@@ -41,10 +41,10 @@ public class ActionExecutorFactory {
             return null;
         } else if (executorType.equalsIgnoreCase("PRINTLINEEXECUTOR")) {
             // check the input string and return printLineExecutor instance
-            return PrintLineExecutor.getInstance();
+            return new PrintLineExecutor();
         } else if (executorType.equalsIgnoreCase("zipfileexecutor")) {
             // check the input string and return zipLineExecutor instance
-            return ZipFileExecutor.getInstance();
+            return new ZipFileExecutor();
         } else {
             // if input string doesn't match any above cases, invalid input return null.
             return null;

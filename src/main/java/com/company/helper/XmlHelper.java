@@ -104,7 +104,7 @@ public class XmlHelper {
      */
     public String getLogFilePath() {
 
-        return confDocument.getElementsByTagName("path").item(0).getTextContent();
+        return confDocument.getElementsByTagName("logPath").item(0).getTextContent();
     }
 
     /**
@@ -137,4 +137,24 @@ public class XmlHelper {
         return regexDocument.getElementsByTagName("GeneralInfoRegex").item(0).getTextContent();
 
     }
+    /**
+     * Used to get oom error regex pattern.
+     *
+     * @return String - oom error Regex pattern
+     */
+    public String getOomErrorRegEx() {
+
+        return regexDocument.getElementsByTagName("OomErrorRegex").item(0).getTextContent();
+    }
+    /**
+     * Used to get file path of timing Log.
+     *
+     * @return String - timing Log path.
+     */
+    public String gettimingLogPath() {
+
+        return confDocument.getElementsByTagName("timingPath").item(0).getTextContent();
+    }
+
+
 }

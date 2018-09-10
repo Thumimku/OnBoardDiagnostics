@@ -28,25 +28,14 @@ package com.company.actionexecutor;
  */
 public class PrintLineExecutor implements ActionExecutor {
 
-    private static PrintLineExecutor printLineExecutor; // static instance for singleton method.
 
     /**
-     * private Constructor.
+     * public Constructor.
      */
-    private PrintLineExecutor() {
+    public PrintLineExecutor() {
     }
 
-    /**
-     * Singleton method used to create object.
-     * @return PrintLineExecutor
-     */
-    static synchronized PrintLineExecutor getInstance() {
 
-        if (printLineExecutor == null) { // return new instance if current object is null.
-            printLineExecutor = new PrintLineExecutor();
-        }
-        return printLineExecutor;
-    }
 
     /**
      * override method used to print the logLines.

@@ -17,29 +17,33 @@ package com.company;
  *  under the License.
  */
 
-
 import com.company.actionexecutor.ActionExecutor;
 import com.company.actionexecutor.ActionExecutorFactory;
-import com.company.threaddumper.ServerProcess;
-import com.company.threaddumper.ThreadDumper;
+import com.company.actionexecutor.DatabaseQueryExtracter;
+import com.company.actionexecutor.dumper.MemoryDumper;
+import com.company.actionexecutor.dumper.ServerProcess;
+import com.company.actionexecutor.dumper.ThreadDumper;
+import com.company.actionexecutor.netstat.NetstatExecuter;
 
 import java.io.File;
 import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.regex.Pattern;
 
 /**
  * Whenever there is error occur in Wso2server MatchRuleEngine detects it.
  * It invokes the methods of this class's instance.
  * This class is used to interpret the error and do appropriate actions for that error.
- *
+ * <p>
  * Example error scenario :-
- *      When adn error occurs interpreter instance create a new folder name as current Time stamp.
- *      Then let threadDumper do thread dumper in that folder.
- *      Then invoke zip execution to write logLine in the folder and zip it.
+ * When an error occurs interpreter instance create a new folder name as current Time stamp.
+ * Then let threadDumper do thread dumper in that folder.
+ * Then invoke zip execution to write logLine in the folder and zip it.
  *
+ * @author thumilan@wso2.com
  * @see MatchRuleEngine
  * @see ThreadDumper
  * @see com.company.actionexecutor.ZipFileExecutor
- * @author thumilan@wso2.com
  */
 public class Interpreter {
 
@@ -53,6 +57,7 @@ public class Interpreter {
 
     private Boolean folderexists; //  check whether folder exists or not.
 
+    private String requestID;
 
     /**
      * public Constructor.
@@ -60,16 +65,21 @@ public class Interpreter {
      * This constructor calls createFolder to create the Thread Dump folder and do thread dump.
      */
     public Interpreter() {
+
         this.actionExecutorFactory = new ActionExecutorFactory();
         this.actionExecutor = actionExecutorFactory.getActionExecutor("zipfileexecutor");
-        createFolder();
-        dothreaddump();
+        requestID = null;
+        //createFolder();
+        //doNetstat();
+        //doThreadDump();
+        //doMemoryDump();
 
     }
 
     /**
      * Method used to interpret logLine.
      * Here fodler path is abstracted from MatchRule Engine
+     *
      * @param logLine
      */
     public void interpret(StringBuilder logLine) {
@@ -80,10 +90,15 @@ public class Interpreter {
     /**
      * Create folder for collective thread dump.
      */
-    private void createFolder() {
+    public void createFolder() {
 
         folderexists = false; // Initially fileexists flag set as false
-        folderpath = (System.getProperty("user.dir") + "/src/main/resources/log/"); // get log file path
+        folderpath = (System.getProperty("user.dir") + "/log/"); // get log file path
+
+        File logfolder = new File(folderpath);
+        if (!(logfolder.exists())) {
+            logfolder.mkdir();
+        }
 
         // folder name set as timestamp
         foldername = new Timestamp(System.currentTimeMillis()).toString().replace(" ", "_");
@@ -106,8 +121,46 @@ public class Interpreter {
      * This method create ThreadDumper instance and do thread dump.
      * java process of wso2 server is referenced as ServerProcess
      */
-    private void dothreaddump() {
+    public void doThreadDump() {
+
         ThreadDumper threadDumper = new ThreadDumper(new ServerProcess().getProcessId());
         threadDumper.doThreadDumping(folderpath);
+    }
+
+    public void doMemoryDump() {
+
+        MemoryDumper memoryDumper = new MemoryDumper(new ServerProcess().getProcessId());
+        memoryDumper.doMemoryDumping(folderpath);
+
+    }
+
+    public void doNetstat() {
+
+        NetstatExecuter netstatExecuter = new NetstatExecuter();
+        netstatExecuter.donetstat(folderpath);
+    }
+
+    public void doDBQueryDump() {
+
+        if (requestID.length() > 5) {
+            DatabaseQueryExtracter databaseQueryExtracter = new DatabaseQueryExtracter(folderpath);
+            databaseQueryExtracter.ScanForQuary(requestID);
+        }
+
+    }
+
+    public String getFolderpath() {
+
+        return folderpath;
+    }
+
+    public void extractRequestID(String testLine) {
+
+        while (testLine.contains("[")) {
+            testLine = testLine.replace("[", "]");
+        }
+
+        String[] testarray = testLine.split("]");
+        requestID = (testarray[7]);
     }
 }
