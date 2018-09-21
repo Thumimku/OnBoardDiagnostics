@@ -1,5 +1,16 @@
 <pattern>
+    <!--<GeneralErrorRegex>TID:\ \[\d*\]\ \[\]\ \[\d\d\d\d\-\d\d\-\d\d\ \d\d\:\d\d\:\d\d\,\d+\]\ \@mylccc\.edu\ \[\d*\]\ \[IS\]ERROR</GeneralErrorRegex>-->
     <GeneralErrorRegex>TID:\ \[(-)\d*\]\ \[\]\ \[\d\d\d\d\-\d\d\-\d\d\ \d\d\:\d\d\:\d\d\,\d+\]\ ERROR</GeneralErrorRegex>
-    <GeneralInfoRegex>TID:\ \[(-)\d*\]\ \[\]\ \[\d\d\d\d\-\d\d\-\d\d\ \d\d\:\d\d\:\d\d\,\d+\]\  INFO</GeneralInfoRegex>
-    <OomErrorRegex>Caused\ by:\ java.lang.OutOfMemoryError:</OomErrorRegex>
+
+    <GeneralInfoRegex>TID:\ \[(-)\d*\]\ \[\]\ \[\d\d\d\d\-\d\d\-\d\d\ \d\d\:\d\d\:\d\d\,\d+\]\ \ INFO</GeneralInfoRegex>
+
+    <!--<GeneralInfoRegex>TID:\ \[\d*\]\ \[\]\ \[\d\d\d\d\-\d\d\-\d\d\ \d\d\:\d\d\:\d\d\,\d+\]\ \@hindscc\.edu\ \[\d*\]\ \[IS\]\ INFO</GeneralInfoRegex>-->
+
+    <OomErrorRegex>java.lang.OutOfMemoryError:</OomErrorRegex>
+
+    <uuidRegex>........-....-....-....-............</uuidRegex>
+
+    <errorRegex>ERROR(.*)</errorRegex>
+
+    <timeRegex>\d\d\d\d-\d\d-\d\d\ \d\d:\d\d:\d\d,\d\d\d</timeRegex>
 </pattern>

@@ -125,9 +125,6 @@ public class ThreadDumper {
                     synchronized (this) {
                         this.wait(delay);
                     }
-
-
-
                 } catch (IOException e) {
                     System.out.print("Unable to do thread dump for " + processid + "\n");
                 } catch (InterruptedException e) {

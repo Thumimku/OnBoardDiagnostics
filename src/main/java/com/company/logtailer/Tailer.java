@@ -104,11 +104,11 @@ import java.nio.channels.Selector;
  */
 public class Tailer extends Thread {
 
-    private String logLine;
+    private static String logLine;
     /**
      * The file which will be tailed.
      */
-    private final File file;
+    private final   File file  ;
     /**
      * The amount of time to wait for the file to be updated.
      */
@@ -137,7 +137,16 @@ public class Tailer extends Thread {
     /**
      * The recycled buffer for buffered reads.
      */
-    private final ByteBuffer buffer;
+    private static  ByteBuffer buffer = null;
+
+    /**
+     * The Tailer position in the file
+     */
+    private static long position;
+
+    private static RandomAccessFile reader;
+
+    private static long datalength;
 
     /**
      * Creates a Tailer for the given file, starting from the beginning, with the default delay of 1.0s,
@@ -160,7 +169,6 @@ public class Tailer extends Thread {
     public Tailer(File file, TailerListener listener, long delay) {
         this(file, listener, delay, true);
     }
-
     /**
      * Creates a Tailer for the given file, with the default buffer size of 1024 bytes.
      *
@@ -222,7 +230,7 @@ public class Tailer extends Thread {
      * Follows changes in the file, calling the TailerListener's handle method for each new line.
      */
     public void run() {
-        RandomAccessFile reader = null;
+        reader = null;
         FileChannel fileChannel = null;
         try {
             Selector selector = Selector.open();
@@ -231,7 +239,7 @@ public class Tailer extends Thread {
 
         }
         try {
-            long position = 0; // position within the file
+             position = 0; // position within the file
             // Open the file
             while (run && reader == null) {
                 try {
@@ -283,6 +291,7 @@ public class Tailer extends Thread {
                     // The file has more content than it did last time
                     long oldPosition = position;
                     position = readLines(fileChannel);
+
                     // If position is equal to old position but wasn't supposed to be because file seems to be modified
                     // it means file has been rotated but we're not correctly reading it, so force rotation:
                     if (position == oldPosition) {
@@ -332,6 +341,7 @@ public class Tailer extends Thread {
         long read = 0;
         try {
             read = fileChannel.read(buffer);
+            datalength = buffer.remaining();
             buffer.flip();
             while (buffer.hasRemaining()) {
                 String charString = String.valueOf((char) buffer.get());
@@ -346,6 +356,7 @@ public class Tailer extends Thread {
             }
 
             buffer.clear();
+
             return fileChannel.position();
         } catch (IOException e) {
             System.out.print("Unable to read from the log file due to : " + e.getMessage());
@@ -363,5 +374,29 @@ public class Tailer extends Thread {
             System.out.print("Unable to close the file due to : " + ioe.getMessage());
         }
     }
+    public static boolean isEnd(String testline) {
+//        String checkLine="";
+//        while (buffer.hasRemaining()) {
+//            String charString = String.valueOf((char) buffer.get());
+//            checkLine = checkLine + charString;
+//            if (charString.compareTo("\n") == 0) {
+//                listener.handle(checkLine);
+//                checkLine = "";
+//
+//
+//            }
+//
+//        }
+
+        try {
+            long currentposition = position+datalength;
+            //System.out.print(reader.length()+"   :   "+position+"   :   "+currentposition+"  :  "+(!(buffer.hasRemaining())&&((position+512)>(reader.length())))+"  :   "+logLine+"\n");
+            return (!(buffer.hasRemaining())&&((position+512)>(reader.length())));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+//    (((position+512)>reader.length())&&(logLine.length()==0))
 
 }

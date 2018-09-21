@@ -20,9 +20,8 @@ package com.company;
 
 import com.company.helper.XmlHelper;
 import com.company.logtailer.Tailer;
-import com.company.logtailer.TailerListener;
-import java.io.File;
 
+import java.io.File;
 
 /**
  * Typical Java Main class.
@@ -30,12 +29,18 @@ import java.io.File;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.print("welcome to OnBoard Diagnostics Tool For WSO2 IS");
-        TailerListener logTailReader = new LogTailReader();
-        File file =  new File (new XmlHelper().getLogFilePath());
-        Thread tailer = new Tailer(file, logTailReader);
-        tailer.run();
-       
+        System.out.print("................Loading  OnBoard Diagnostics Tool For WSO2 IS.............\n\n");
+//        TailerListener logTailReader = new LogTailReader();
+//        File file =  new File (new XmlHelper().getLogFilePath());
+//        Thread tailer = new Tailer(file, logTailReader);
+        System.out.print("......Loading Log File path Configuration data from wso2conf.xml .........\n\n");
+        XmlHelper.parsingData();
+        System.out.print(" wso2carbon.log File path :- "+XmlHelper.LogFilePath+"\n");
+        System.out.print(" wso2carbon.pid File path :- "+XmlHelper.PIdFilePath+"\n");
+        System.out.print(" timing.log File path :- "+XmlHelper.TimingLogPath+"\n\n");
+        System.out.print("......Loading Regex Patterns from RegExPattern.xml........................\n\n");
+        new Tailer(new File(XmlHelper.LogFilePath),new LogTailReader()).run();
+
 
     }
 }

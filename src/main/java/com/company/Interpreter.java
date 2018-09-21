@@ -20,14 +20,20 @@ package com.company;
 import com.company.actionexecutor.ActionExecutor;
 import com.company.actionexecutor.ActionExecutorFactory;
 import com.company.actionexecutor.DatabaseQueryExtracter;
+import com.company.actionexecutor.LogLineWriter;
+import com.company.actionexecutor.ZipFileExecutor;
 import com.company.actionexecutor.dumper.MemoryDumper;
 import com.company.actionexecutor.dumper.ServerProcess;
 import com.company.actionexecutor.dumper.ThreadDumper;
+import com.company.actionexecutor.lsof.OpenFileFinder;
 import com.company.actionexecutor.netstat.NetstatExecuter;
+import com.company.helper.XmlHelper;
 
 import java.io.File;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -59,6 +65,8 @@ public class Interpreter {
 
     private String requestID;
 
+
+
     /**
      * public Constructor.
      * Current action executor is set as zipFile executor
@@ -67,9 +75,11 @@ public class Interpreter {
     public Interpreter() {
 
         this.actionExecutorFactory = new ActionExecutorFactory();
+
         this.actionExecutor = actionExecutorFactory.getActionExecutor("zipfileexecutor");
         requestID = null;
-        //createFolder();
+        createLogFolder();
+
         //doNetstat();
         //doThreadDump();
         //doMemoryDump();
@@ -87,9 +97,18 @@ public class Interpreter {
         actionExecutor.execute(logLine, folderpath);
     }
 
+    private void createLogFolder() {
+        folderpath = (System.getProperty("user.dir") + "/log/"); // get log file path
+
+        File logfolder = new File(folderpath);
+        if (!(logfolder.exists())) {
+            logfolder.mkdir();
+        }
+    }
     /**
-     * Create folder for collective thread dump.
+     * Create folder for dump.
      */
+
     public void createFolder() {
 
         folderexists = false; // Initially fileexists flag set as false
@@ -142,7 +161,7 @@ public class Interpreter {
 
     public void doDBQueryDump() {
 
-        if (requestID.length() > 5) {
+        if (requestID != null) {
             DatabaseQueryExtracter databaseQueryExtracter = new DatabaseQueryExtracter(folderpath);
             databaseQueryExtracter.ScanForQuary(requestID);
         }
@@ -155,12 +174,28 @@ public class Interpreter {
     }
 
     public void extractRequestID(String testLine) {
-
-        while (testLine.contains("[")) {
-            testLine = testLine.replace("[", "]");
+        Pattern pattern = Pattern.compile(XmlHelper.UuidRegex);
+        Matcher matcher = pattern.matcher(testLine);
+        if (matcher.find()){
+            requestID = matcher.group(1);
         }
+    }
 
-        String[] testarray = testLine.split("]");
-        requestID = (testarray[7]);
+    public void writeLogLine(StringBuilder Logline) {
+
+        LogLineWriter logLineWriter = new LogLineWriter();
+        logLineWriter.execute(Logline,folderpath);
+    }
+
+    public void executelsof() {
+
+        OpenFileFinder openFileFinder = new OpenFileFinder(new ServerProcess().getProcessId());
+        openFileFinder.dolsof(folderpath);
+
+    }
+    public void executeZipFileExecuter() {
+
+        ZipFileExecutor zipFileExecutor =new ZipFileExecutor();
+        zipFileExecutor.execute(null,folderpath);
     }
 }

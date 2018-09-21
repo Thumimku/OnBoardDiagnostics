@@ -35,11 +35,46 @@ import javax.xml.parsers.ParserConfigurationException;
 public class XmlHelper {
 
     //Initiate DocumentBuilder
-    private DocumentBuilder documentBuilder;
-    //Initiate Configure xml Document
-    private Document confDocument;
-    //Initiate Regex xml Document
-    private Document regexDocument;
+    private static DocumentBuilder documentBuilder;
+    //Initiate Configure xml Document and regex document
+    private static Document confDocument,regexDocument;
+    //static string regex;
+    public static String generalInfoRegex;
+    //static string regex;
+    public static String generalErrorRegex;
+    //static string regex;
+    public static String LogFilePath;
+    //static string regex;
+    public static String PIdFilePath;
+    //static string regex;
+    public static String ErrorRegex;
+    //static string regex;
+    public static String UuidRegex;
+    //static string regex;
+    public static String TimingLogPath;
+    //static string regex;
+    public static String OOMErrorRegex;
+
+
+    public static void parsingData(){
+        try {
+            //Initiate DocumentBuilderFactory
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            normaliseRegexFile();
+            normaliseconfFile();
+            generalInfoRegex = regexDocument.getElementsByTagName("GeneralInfoRegex").item(0).getTextContent();
+            generalErrorRegex = regexDocument.getElementsByTagName("GeneralErrorRegex").item(0).getTextContent();
+            ErrorRegex = regexDocument.getElementsByTagName("errorRegex").item(0).getTextContent();
+            UuidRegex = regexDocument.getElementsByTagName("uuidRegex").item(0).getTextContent();
+            OOMErrorRegex = regexDocument.getElementsByTagName("OomErrorRegex").item(0).getTextContent();
+            LogFilePath = confDocument.getElementsByTagName("logPath").item(0).getTextContent();
+            PIdFilePath = confDocument.getElementsByTagName("pidpath").item(0).getTextContent();
+            TimingLogPath = confDocument.getElementsByTagName("timingPath").item(0).getTextContent();
+        } catch (ParserConfigurationException e) {
+            System.out.print("Unable to parse xml files");
+        }
+    }
 
 
     public XmlHelper() {
@@ -58,14 +93,14 @@ public class XmlHelper {
 
     //Address the Configure xml file
 
-    File confFile = new File(System.getProperty("user.dir") + "/src/main/resources/wso2conf.xml");
+    static File confFile = new File(System.getProperty("user.dir") + "/src/main/resources/wso2conf.xml");
     //Address the pattern xml file
-    File patternFile = new File(System.getProperty("user.dir") + "/src/main/resources/RegExPattern.xml");
+    static File patternFile = new File(System.getProperty("user.dir") + "/src/main/resources/RegExPattern.xml");
 
     /**
      * This method used to normalise the conf file.
      */
-    private void normaliseconfFile() {
+    private static void normaliseconfFile() {
 
         try {
             confDocument = documentBuilder.parse(confFile);
@@ -83,7 +118,7 @@ public class XmlHelper {
     /**
      * This method used to normalise the regex file.
      */
-    private void normaliseRegexFile() {
+    private static void normaliseRegexFile() {
 
         try {
             regexDocument = documentBuilder.parse(patternFile);
@@ -102,7 +137,7 @@ public class XmlHelper {
      *
      * @return String - Path of WSO2carbon.log
      */
-    public String getLogFilePath() {
+    public  String getLogFilePath() {
 
         return confDocument.getElementsByTagName("logPath").item(0).getTextContent();
     }
@@ -132,7 +167,7 @@ public class XmlHelper {
      *
      * @return String - general error Regex pattern
      */
-    public String getGeneralInfoRegEx() {
+    public static String getGeneralInfoRegEx() {
 
         return regexDocument.getElementsByTagName("GeneralInfoRegex").item(0).getTextContent();
 
@@ -154,6 +189,25 @@ public class XmlHelper {
     public String gettimingLogPath() {
 
         return confDocument.getElementsByTagName("timingPath").item(0).getTextContent();
+    }
+
+    /**
+     * Used to get oom error regex pattern.
+     *
+     * @return String - oom error Regex pattern
+     */
+    public String getUuidRegEx() {
+
+        return regexDocument.getElementsByTagName("uuidRegex").item(0).getTextContent();
+    }
+    /**
+     * Used to get oom error regex pattern.
+     *
+     * @return String - oom error Regex pattern
+     */
+    public String getErrorRegEx() {
+
+        return regexDocument.getElementsByTagName("errorRegex").item(0).getTextContent();
     }
 
 

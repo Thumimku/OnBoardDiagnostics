@@ -61,13 +61,7 @@ public class ZipFileExecutor implements ActionExecutor {
     public void execute(StringBuilder logLine, String path) {
         File folder = new File(path);
 
-        try {
-            FileWriter writer = new FileWriter(path + "/" + folder.getName() + ".txt",true);
-            writer.write(logLine.toString());
-            writer.close();
-        } catch (IOException e) {
 
-        }
         try {
             zipFolder(path, logDirpath + folder.getName() + ".zip");
         } catch (Exception e) {

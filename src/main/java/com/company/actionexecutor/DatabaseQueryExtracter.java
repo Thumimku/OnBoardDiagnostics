@@ -65,9 +65,9 @@ public class DatabaseQueryExtracter {
 
         this.buffer = ByteBuffer.allocate(512);
 
-        if (new File(new XmlHelper().gettimingLogPath()).exists()) {
+        if (new File(XmlHelper.TimingLogPath).exists()) {
             try {
-                this.timingLog = new RandomAccessFile(new XmlHelper().gettimingLogPath(), "r");
+                this.timingLog = new RandomAccessFile(XmlHelper.TimingLogPath, "r");
                 this.timingLogChannel = timingLog.getChannel();
                 this.position = 0;
                 this.filesize = 0;

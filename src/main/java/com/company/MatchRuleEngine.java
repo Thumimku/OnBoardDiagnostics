@@ -19,6 +19,10 @@ package com.company;
  */
 
 import com.company.helper.XmlHelper;
+import com.company.logtailer.Tailer;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,13 +37,15 @@ import java.util.regex.Pattern;
     private String generalErrorRegex; // general error regex
     private String generalInfoRegex; // general info regex
     private String oomErrorRegex; // oom error regex
-    private XmlHelper xmlHelper; // initiate XmlHelper
     private Interpreter interpreter; // initiate Interpreter
     private Pattern pattern;
     private Matcher matcher;
     private Boolean hasEngineApproved; // check whether the line is eligible or not
+    private Boolean alreadyOccured; // check whether current error is already occurred or not
 
     private StringBuilder logLine; // LogLine object initiated
+
+    private ArrayList<String> errortypesArrayList;
 
 //    private ActionExecutorFactory actionExecutorFactory; // actionExecutorFactory to create executor objects
 //
@@ -47,13 +53,13 @@ import java.util.regex.Pattern;
 
 
     public MatchRuleEngine() {
-        this.xmlHelper = new XmlHelper();
-        this.hasEngineApproved = false;
-        this.generalInfoRegex = xmlHelper.getGeneralInfoRegEx();
-        this.generalErrorRegex = xmlHelper.getGeneralErrorRegEx();
-        this.oomErrorRegex = xmlHelper.getOomErrorRegEx();
-        this.interpreter = new Interpreter();
 
+        this.hasEngineApproved = false;
+        this.generalInfoRegex = XmlHelper.generalInfoRegex;
+        this.generalErrorRegex = XmlHelper.generalErrorRegex;
+        this.oomErrorRegex = XmlHelper.ErrorRegex;
+        this.interpreter = new Interpreter();
+        this.errortypesArrayList = new ArrayList<>();
     }
 
     /**
@@ -106,24 +112,45 @@ import java.util.regex.Pattern;
         if (hasEngineApproved) { // previous lines were approved by the engine.
 
             if (checkInitialErrorMatch(testLine)){
-                interpreter.extractRequestID(testLine);
-                interpreter.doDBQueryDump();
+
+                //need to check repeatness
+
+//                repeatedErrorStatement(testLine);
+//                interpreter.doNetstat();
+//                interpreter.doThreadDump();
+                //interpreter.doMemoryDump();
+//                interpreter.extractRequestID(testLine);
+//                interpreter.doDBQueryDump();
             }
-            if(checkOomErrorMatch(testLine)){
+            else if(checkOomErrorMatch(testLine)){
                 //interpreter.doNetstat();
-
+                //interpreter.doThreadDump();
+                //interpreter.doMemoryDump();
+                //interpreter.extractRequestID(testLine);
+                //interpreter.doDBQueryDump();
             }
-
-            if (checkInitialInfoMatch(testLine)) {
+            else if (checkInitialInfoMatch(testLine)) {
                 // Check whether current line is InfoLine.
                 // If so switch the boolean parameter into false and execute collected logLine.
                 hasEngineApproved = false;
                 if (interpreter != null) {
-                    interpreter.interpret(logLine);
+                    interpreter.writeLogLine(logLine);
+                    interpreter.executeZipFileExecuter();
                 }
 
 
-            } else {
+            }
+            else if (Tailer.isEnd(testLine)){
+                hasEngineApproved = false;
+                logLine.append(testLine);
+                if (interpreter != null) {
+                    interpreter.writeLogLine(logLine);
+                    interpreter.executeZipFileExecuter();
+                }
+
+            }
+
+            else {
                 //hasEngineApproved remain true
                 //current line also error line append it to logLine.
                 logLine.append(testLine);
@@ -135,17 +162,51 @@ import java.util.regex.Pattern;
             if (checkInitialErrorMatch(testLine)) {
                 // Check whether current line is error line.
                 // If so switch the boolean parameter into true and create new string builder.
+                
+//                repeatedErrorStatement(testLine);
                 hasEngineApproved = true;
                 logLine = new StringBuilder();
                 logLine.append(testLine);
                 interpreter.createFolder();
-                interpreter.extractRequestID(testLine);
-                interpreter.doDBQueryDump();
+                interpreter.executelsof();
+//                interpreter.doNetstat();
+//                interpreter.doThreadDump();
+                //interpreter.doMemoryDump();
+//                interpreter.extractRequestID(testLine);
+//                interpreter.doDBQueryDump();
+
+                // need to check repeatness
 
 
 
 
             }
+        }
+    }
+    
+    private boolean repeatedErrorStatement(String testline){
+        Pattern pattern = Pattern.compile(XmlHelper.ErrorRegex);
+        Matcher matcher = pattern.matcher(testline);
+        if (matcher.find()){
+
+            if (errortypesArrayList.isEmpty()){
+                this.errortypesArrayList.add(matcher.group(1));
+                System.out.print(Arrays.toString(errortypesArrayList.toArray()));
+                System.out.print("\n\n");
+                return false;
+            }else{
+                for (String matchline : errortypesArrayList){
+                    if (matchline.compareTo(matcher.group(1))==0){
+                        return true;
+                    }
+                }
+                this.errortypesArrayList.add(matcher.group(1));
+                System.out.print(Arrays.toString(errortypesArrayList.toArray()));
+                System.out.print("\n\n");
+                return false;
+            }
+        } else {
+            return false;
         }
     }
 

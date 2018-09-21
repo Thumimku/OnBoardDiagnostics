@@ -42,7 +42,7 @@ public class ServerProcess {
         RandomAccessFile file = null;
         try {
             // read the process id from the wso2carbon.pid file
-            file = new RandomAccessFile(new XmlHelper().getPidFilePath(), "r");
+            file = new RandomAccessFile(XmlHelper.PIdFilePath, "r");
             this.processId = file.readLine();
         } catch (IOException e) {
             System.out.print("wso2carbon.pid file is Not Found.");
