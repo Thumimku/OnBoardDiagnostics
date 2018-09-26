@@ -12,5 +12,5 @@
 
     <errorRegex>ERROR(.*)</errorRegex>
 
-    <timeRegex>\d\d\d\d-\d\d-\d\d\ \d\d:\d\d:\d\d,\d\d\d</timeRegex>
+    <timeRegex>\d\d:\d\d:\d\d,\d\d\d</timeRegex>
 </pattern>

@@ -1,4 +1,4 @@
-package com.company.actionexecutor.dumper;
+package com.company.actionexecutor.diagnosticCommand.dumper;
 /*
  * Copyright (c) 2005-2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -22,7 +22,6 @@ import com.company.helper.XmlHelper;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-
 /**
  * This class is used to represent the java process of wso2carbon server.
  *
@@ -30,15 +29,14 @@ import java.io.RandomAccessFile;
  */
 public class ServerProcess {
 
-
     //private process id
     private String processId;
 
     /**
      * Public constructor.
-     *
      */
     public ServerProcess() {
+
         RandomAccessFile file = null;
         try {
             // read the process id from the wso2carbon.pid file
@@ -50,26 +48,28 @@ public class ServerProcess {
         }
     }
 
-
-
     /**
      * Getter method for processId.
+     *
      * @return String processId
      */
     public String getProcessId() {
+
         return this.processId;
     }
 
     /**
      * Method used to check whether process is alive or not.
+     *
      * @return Boolean isAlive()
      */
     public boolean isAlive() {
+
         try {
 
-             return (Runtime.getRuntime().exec("ps " + processId).isAlive());
+            return (Runtime.getRuntime().exec("ps " + processId).isAlive());
         } catch (IOException e) {
-                System.out.print("Unable to check the process state.");
+            System.out.print("Unable to check the process state.");
         }
         return false;
     }

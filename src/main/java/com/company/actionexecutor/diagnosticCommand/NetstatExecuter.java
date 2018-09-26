@@ -1,4 +1,4 @@
-package com.company.actionexecutor.lsof;
+package com.company.actionexecutor.diagnosticCommand;
 /*
  * Copyright (c) 2005-2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -17,8 +17,7 @@ package com.company.actionexecutor.lsof;
  *  under the License.
  */
 
-
-import com.company.actionexecutor.dumper.ServerProcess;
+import com.company.OsValidator;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -26,43 +25,38 @@ import java.io.IOException;
 import java.util.Scanner;
 
 /**
- * MemoryDumper class is used to do memory dump for given process.
- * This Process was referenced by ServerProcess class.
- * @see ServerProcess
- *
- * This class use Java Runtinme enviroment and jmap command to do memory dump.
- *
+ * NetStatExecuter class is used to execute netstat command.
  *
  * @author thumilan@wso2.com
  */
-public class OpenFileFinder {
+public class NetstatExecuter implements ActionExecutor{
 
-    /**
-     * This string is used to represent process id.
-     */
-    private String processId;
 
-    /**
-     * Creates MemoryDumper with process id.
-     *
-     * @param processId process id which used for memory dumping
-     */
-    public OpenFileFinder(String processId) {
 
-        this.processId = processId;
 
-    }
+
 
     /**
      * Method used to do memory dump with using Java Runtime Environment and jmap command.
-     *
      * @param filepath
      */
-    public void dolsof(String filepath) {
+    @Override
+    public void execute(String filepath) {
+
 
         if (new File(filepath).exists()) { // check whether file exists before dumping.
-            String frame = filepath+"/lsof.txt ";
-            String command = "lsof -p " + this.processId;
+            System.out.print("\t Netstat Successfuly done.\n");
+            String filename= "/netstat.txt ";
+            String frame = filepath + filename;
+            String command;
+            if(OsValidator.isUnix()){
+                command = "netstat -lt";
+
+            }else if (OsValidator.isWindows()){
+                command = "netstat -f";
+            }else {
+                command = null;
+            }
             try {
                 if (command != null) {
                     Process process = Runtime.getRuntime().exec(command);
@@ -84,7 +78,9 @@ public class OpenFileFinder {
             } catch (IOException e) {
                 System.out.print("Unable to do netstat");
             }
+
         }
 
     }
+
 }

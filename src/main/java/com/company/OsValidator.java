@@ -19,9 +19,9 @@ package com.company;
 
 /**
  * This class is used to check which OS is the tool running on.
- *
  */
 public class OsValidator {
+
     private static String OS = System.getProperty("os.name").toLowerCase();
 
     public static boolean isWindows() {
@@ -38,7 +38,7 @@ public class OsValidator {
 
     public static boolean isUnix() {
 
-        return (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0 );
+        return (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0);
 
     }
 

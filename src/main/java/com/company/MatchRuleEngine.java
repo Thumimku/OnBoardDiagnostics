@@ -21,35 +21,32 @@ package com.company;
 import com.company.helper.XmlHelper;
 import com.company.logtailer.Tailer;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *This class used to match the regex and the logLine.
+ * This class used to match the regex and the logLine.
  *
  * @author thumilan@wso2.com
  */
 
- public class MatchRuleEngine {
+public class MatchRuleEngine {
 
     private String generalErrorRegex; // general error regex
+
     private String generalInfoRegex; // general info regex
-    private String oomErrorRegex; // oom error regex
+
     private Interpreter interpreter; // initiate Interpreter
+
     private Pattern pattern;
+
     private Matcher matcher;
+
     private Boolean hasEngineApproved; // check whether the line is eligible or not
-    private Boolean alreadyOccured; // check whether current error is already occurred or not
+
+    private Boolean enableTailerCheck; // check whether current error is already occurred or not
 
     private StringBuilder logLine; // LogLine object initiated
-
-    private ArrayList<String> errortypesArrayList;
-
-//    private ActionExecutorFactory actionExecutorFactory; // actionExecutorFactory to create executor objects
-//
-//    private ActionExecutor actionExecutor;
 
 
     public MatchRuleEngine() {
@@ -57,9 +54,8 @@ import java.util.regex.Pattern;
         this.hasEngineApproved = false;
         this.generalInfoRegex = XmlHelper.generalInfoRegex;
         this.generalErrorRegex = XmlHelper.generalErrorRegex;
-        this.oomErrorRegex = XmlHelper.ErrorRegex;
         this.interpreter = new Interpreter();
-        this.errortypesArrayList = new ArrayList<>();
+        this.enableTailerCheck = true;
     }
 
     /**
@@ -89,19 +85,6 @@ import java.util.regex.Pattern;
     }
 
     /**
-     * This method checks whether current testLine is match with Oom error regex.
-     *
-     * @param testLine the line.
-     * @return boolean - true if matches.
-     */
-    private boolean checkOomErrorMatch(String testLine) {
-
-        pattern = Pattern.compile(oomErrorRegex);
-        matcher = pattern.matcher(testLine);
-        return matcher.find();
-    }
-
-    /**
      * This method checks whether the current line is error line or not.
      * Based on the hasEngineApproved boolean parameter this method appends line
      *
@@ -111,102 +94,58 @@ import java.util.regex.Pattern;
 
         if (hasEngineApproved) { // previous lines were approved by the engine.
 
-            if (checkInitialErrorMatch(testLine)){
+            if (checkInitialErrorMatch(testLine)) {
 
-                //need to check repeatness
-
-//                repeatedErrorStatement(testLine);
-//                interpreter.doNetstat();
-//                interpreter.doThreadDump();
-                //interpreter.doMemoryDump();
-//                interpreter.extractRequestID(testLine);
-//                interpreter.doDBQueryDump();
-            }
-            else if(checkOomErrorMatch(testLine)){
-                //interpreter.doNetstat();
-                //interpreter.doThreadDump();
-                //interpreter.doMemoryDump();
-                //interpreter.extractRequestID(testLine);
-                //interpreter.doDBQueryDump();
-            }
-            else if (checkInitialInfoMatch(testLine)) {
+                enableTailerCheck = false;
+                hasEngineApproved = false;
+                if (interpreter != null) {
+                    interpreter.interpret(logLine);
+                } else {
+                    interpreter = new Interpreter();
+                    interpreter.interpret(logLine);
+                }
+            } else if (checkInitialInfoMatch(testLine)) {
                 // Check whether current line is InfoLine.
                 // If so switch the boolean parameter into false and execute collected logLine.
                 hasEngineApproved = false;
                 if (interpreter != null) {
-                    interpreter.writeLogLine(logLine);
-                    interpreter.executeZipFileExecuter();
-                }
-
-
-            }
-            else if (Tailer.isEnd(testLine)){
-                hasEngineApproved = false;
-                logLine.append(testLine);
-                if (interpreter != null) {
-                    interpreter.writeLogLine(logLine);
-                    interpreter.executeZipFileExecuter();
+                    interpreter.interpret(logLine);
+                } else {
+                    interpreter = new Interpreter();
+                    interpreter.interpret(logLine);
                 }
 
             }
+            else if (enableTailerCheck) {
+                if (Tailer.isEnd(testLine)) {
+                    hasEngineApproved = false;
+                    logLine.append(testLine);
+                    if (interpreter != null) {
+                        interpreter.interpret(logLine);
+                    } else {
+                        interpreter = new Interpreter();
+                        interpreter.interpret(logLine);
+                    }
 
-            else {
-                //hasEngineApproved remain true
-                //current line also error line append it to logLine.
-                logLine.append(testLine);
-                //what if command end in parse mode how to get Log line???
+                }
             }
 
+            //hasEngineApproved remain true
+            //current line also error line append it to logLine.
+            logLine.append(testLine);
+            //what if command end in parse mode how to get Log line???
 
         } else { // previous lines were not approved by engine.
             if (checkInitialErrorMatch(testLine)) {
                 // Check whether current line is error line.
                 // If so switch the boolean parameter into true and create new string builder.
-                
-//                repeatedErrorStatement(testLine);
                 hasEngineApproved = true;
                 logLine = new StringBuilder();
                 logLine.append(testLine);
-                interpreter.createFolder();
-                interpreter.executelsof();
-//                interpreter.doNetstat();
-//                interpreter.doThreadDump();
-                //interpreter.doMemoryDump();
-//                interpreter.extractRequestID(testLine);
-//                interpreter.doDBQueryDump();
-
-                // need to check repeatness
-
-
+                enableTailerCheck = true;
 
 
             }
-        }
-    }
-    
-    private boolean repeatedErrorStatement(String testline){
-        Pattern pattern = Pattern.compile(XmlHelper.ErrorRegex);
-        Matcher matcher = pattern.matcher(testline);
-        if (matcher.find()){
-
-            if (errortypesArrayList.isEmpty()){
-                this.errortypesArrayList.add(matcher.group(1));
-                System.out.print(Arrays.toString(errortypesArrayList.toArray()));
-                System.out.print("\n\n");
-                return false;
-            }else{
-                for (String matchline : errortypesArrayList){
-                    if (matchline.compareTo(matcher.group(1))==0){
-                        return true;
-                    }
-                }
-                this.errortypesArrayList.add(matcher.group(1));
-                System.out.print(Arrays.toString(errortypesArrayList.toArray()));
-                System.out.print("\n\n");
-                return false;
-            }
-        } else {
-            return false;
         }
     }
 

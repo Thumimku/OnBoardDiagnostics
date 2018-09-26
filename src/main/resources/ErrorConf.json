@@ -1,0 +1,30 @@
+[
+  {
+    "error":"OOMError",
+    "description":"OutOfMemoryError",
+    "regex":"java\\.lang\\.OutOfMemoryError",
+    "diagnosis":[
+      {
+        "executor":"MemoryDump",
+        "reloadTime":"150"
+      },
+      {
+        "executor":"lsof",
+        "reloadTime":"150"
+      }
+
+    ]
+
+  },
+  {
+    "error": "PoolExhausted",
+    "description": "PoolExhaustedError",
+    "regex": "\\{org\\.wso2\\.carbon\\.server\\.admin\\.module\\.handler\\.AuthenticationHandler\\}\\ -\\ \\ org\\.apache\\.tomcat\\.jdbc\\.pool\\.PoolExhaustedException:",
+    "diagnosis": [
+      {
+        "executor": "databaseConnectionScanner",
+        "reloadTime": "150"
+      }
+    ]
+  }
+]

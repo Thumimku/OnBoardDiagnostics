@@ -21,28 +21,29 @@ package com.company.actionexecutor;
  * PrintLineExecutor used to print the logLines into the console.
  * Currently this class designed as a Singleton class inorder to optimise CPU usage.
  * Further research is required to change the design.
+ * <p>
+ * PostExecutor interface is implemented for code reuse.
  *
- * ActionExecutor interface is implemented for code reuse.
- * @see ActionExecutor
  * @author thumilan@wso2.com
+ * @see PostExecutor
  */
-public class PrintLineExecutor implements ActionExecutor {
-
+public class PrintLineExecutor   {
 
     /**
      * public Constructor.
      */
     public PrintLineExecutor() {
+
     }
-
-
 
     /**
      * override method used to print the logLines.
+     *
      * @param logLine the line
      */
-    @Override
+
     public void execute(StringBuilder logLine, String path) {
+
         System.out.print(logLine + "\n");
     }
 }

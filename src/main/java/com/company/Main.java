@@ -17,11 +17,14 @@ package com.company;
  *  under the License.
  */
 
-
 import com.company.helper.XmlHelper;
 import com.company.logtailer.Tailer;
-
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * Typical Java Main class.
@@ -29,18 +32,31 @@ import java.io.File;
 public class Main {
 
     public static void main(String[] args) {
+
         System.out.print("................Loading  OnBoard Diagnostics Tool For WSO2 IS.............\n\n");
-//        TailerListener logTailReader = new LogTailReader();
-//        File file =  new File (new XmlHelper().getLogFilePath());
-//        Thread tailer = new Tailer(file, logTailReader);
         System.out.print("......Loading Log File path Configuration data from wso2conf.xml .........\n\n");
         XmlHelper.parsingData();
-        System.out.print(" wso2carbon.log File path :- "+XmlHelper.LogFilePath+"\n");
-        System.out.print(" wso2carbon.pid File path :- "+XmlHelper.PIdFilePath+"\n");
-        System.out.print(" timing.log File path :- "+XmlHelper.TimingLogPath+"\n\n");
+        System.out.print(" wso2carbon.log File path :- " + new XmlHelper().getLogFilePath() + "\n");
+        System.out.print(" wso2carbon.pid File path :- " + XmlHelper.PIdFilePath + "\n");
         System.out.print("......Loading Regex Patterns from RegExPattern.xml........................\n\n");
-        new Tailer(new File(XmlHelper.LogFilePath),new LogTailReader()).run();
 
+        //json parser to parse the ErrorConf.json  file
+        JSONParser parser = new JSONParser();
+
+        //create new errorinfo instance to load error information.
+        try {
+            new ErrorInfo((JSONArray) parser.parse(new FileReader(
+                    System.getProperty("user.dir") + "/src/main/resources/ErrorConf.json")));
+
+        } catch (IOException e) {
+            System.out.print(e.getMessage());
+        } catch (ParseException e) {
+            System.out.print(e.getMessage());
+        }
+        //Initiate tailer class to tail the file
+        //Xml helper provide path location from xml file
+        //LogTailReader is the implementation of the tailer class.
+        new Tailer(new File(new XmlHelper().getLogFilePath()), new LogTailReader()).run();
 
     }
 }

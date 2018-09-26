@@ -19,6 +19,7 @@ package com.company.helper;
 
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+
 import java.io.File;
 import java.io.IOException;
 import javax.xml.parsers.DocumentBuilder;
@@ -37,14 +38,12 @@ public class XmlHelper {
     //Initiate DocumentBuilder
     private static DocumentBuilder documentBuilder;
     //Initiate Configure xml Document and regex document
-    private static Document confDocument,regexDocument;
+    private static Document confDocument, regexDocument;
     //static string regex;
     public static String generalInfoRegex;
     //static string regex;
     public static String generalErrorRegex;
-    //static string regex;
-    public static String LogFilePath;
-    //static string regex;
+
     public static String PIdFilePath;
     //static string regex;
     public static String ErrorRegex;
@@ -55,8 +54,12 @@ public class XmlHelper {
     //static string regex;
     public static String OOMErrorRegex;
 
+    public static String DbConnectionError;
 
-    public static void parsingData(){
+    public static String TimeRegex;
+
+    public static void parsingData() {
+
         try {
             //Initiate DocumentBuilderFactory
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -68,14 +71,14 @@ public class XmlHelper {
             ErrorRegex = regexDocument.getElementsByTagName("errorRegex").item(0).getTextContent();
             UuidRegex = regexDocument.getElementsByTagName("uuidRegex").item(0).getTextContent();
             OOMErrorRegex = regexDocument.getElementsByTagName("OomErrorRegex").item(0).getTextContent();
-            LogFilePath = confDocument.getElementsByTagName("logPath").item(0).getTextContent();
             PIdFilePath = confDocument.getElementsByTagName("pidpath").item(0).getTextContent();
             TimingLogPath = confDocument.getElementsByTagName("timingPath").item(0).getTextContent();
+            TimeRegex = regexDocument.getElementsByTagName("timeRegex").item(0).getTextContent();
+
         } catch (ParserConfigurationException e) {
             System.out.print("Unable to parse xml files");
         }
     }
-
 
     public XmlHelper() {
 
@@ -89,7 +92,6 @@ public class XmlHelper {
             System.out.print("Unable to parse xml files");
         }
     }
-
 
     //Address the Configure xml file
 
@@ -111,7 +113,6 @@ public class XmlHelper {
             System.out.print("Unable to parse wso2 conf xml file. Please Check the path and permission to access the file.");
 
         }
-
 
     }
 
@@ -137,7 +138,7 @@ public class XmlHelper {
      *
      * @return String - Path of WSO2carbon.log
      */
-    public  String getLogFilePath() {
+    public String getLogFilePath() {
 
         return confDocument.getElementsByTagName("logPath").item(0).getTextContent();
     }
@@ -172,6 +173,7 @@ public class XmlHelper {
         return regexDocument.getElementsByTagName("GeneralInfoRegex").item(0).getTextContent();
 
     }
+
     /**
      * Used to get oom error regex pattern.
      *
@@ -181,6 +183,7 @@ public class XmlHelper {
 
         return regexDocument.getElementsByTagName("OomErrorRegex").item(0).getTextContent();
     }
+
     /**
      * Used to get file path of timing Log.
      *
@@ -200,6 +203,7 @@ public class XmlHelper {
 
         return regexDocument.getElementsByTagName("uuidRegex").item(0).getTextContent();
     }
+
     /**
      * Used to get oom error regex pattern.
      *
@@ -209,6 +213,5 @@ public class XmlHelper {
 
         return regexDocument.getElementsByTagName("errorRegex").item(0).getTextContent();
     }
-
 
 }

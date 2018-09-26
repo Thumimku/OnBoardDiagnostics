@@ -15,12 +15,11 @@ package com.company.actionexecutor;
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
  *  under the License.
-*/
+ */
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -28,16 +27,16 @@ import java.util.zip.ZipOutputStream;
  * ZipLineExecutor used to print the logLines into the console.
  * Currently this class designed as a Singleton class inorder to optimise CPU usage.
  * Further research is required to change the design.
+ * <p>
+ * PostExecutor interface is implemented for code reuse.
  *
- * ActionExecutor interface is implemented for code reuse.
- * @see ActionExecutor
  * @author thumilan@wso2.com
+ * @see PostExecutor
  */
-public class ZipFileExecutor implements ActionExecutor {
-
+public class ZipFileExecutor   {
 
     /**
-     *public Constructor.
+     * public Constructor.
      */
     private String logDirpath = (System.getProperty("user.dir") + "/Zip/"); //Refers the log Folder.
 
@@ -49,18 +48,14 @@ public class ZipFileExecutor implements ActionExecutor {
         }
     }
 
-
-
-
-
     /**
      * This method is used to write the log line into destination file and zip the folder.
+     *
      * @param logLine the line
      */
-    @Override
     public void execute(StringBuilder logLine, String path) {
-        File folder = new File(path);
 
+        File folder = new File(path);
 
         try {
             zipFolder(path, logDirpath + folder.getName() + ".zip");
@@ -72,11 +67,13 @@ public class ZipFileExecutor implements ActionExecutor {
 
     /**
      * Method used to zip folder.
-     * @param srcFolder file which needed to zip.
+     *
+     * @param srcFolder   file which needed to zip.
      * @param destZipFile destination path of zip folder.
      * @throws Exception
      */
     private void zipFolder(String srcFolder, String destZipFile) throws Exception {
+
         ZipOutputStream zip = null;
         FileOutputStream fileWriter = null;
 
@@ -90,9 +87,10 @@ public class ZipFileExecutor implements ActionExecutor {
 
     /**
      * Method used to zip file.
-     * @param path destination path of the file
+     *
+     * @param path    destination path of the file
      * @param srcFile source path of the file which need to zip
-     * @param zip ZipOutputStream
+     * @param zip     ZipOutputStream
      * @throws Exception
      */
     private void addFileToZip(String path, String srcFile, ZipOutputStream zip)
@@ -114,13 +112,15 @@ public class ZipFileExecutor implements ActionExecutor {
 
     /**
      * Mehtod used to zip folder.
-     * @param path destination  path of the folder.
+     *
+     * @param path      destination  path of the folder.
      * @param srcFolder source path of the folder.
-     * @param zip ZipOutputStream
+     * @param zip       ZipOutputStream
      * @throws Exception
      */
     private void addFolderToZip(String path, String srcFolder, ZipOutputStream zip)
             throws Exception {
+
         File folder = new File(srcFolder);
 
         for (String fileName : folder.list()) {
@@ -131,8 +131,5 @@ public class ZipFileExecutor implements ActionExecutor {
             }
         }
     }
-
-
-
 
 }

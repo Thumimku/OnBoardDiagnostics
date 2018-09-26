@@ -25,7 +25,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.Selector;
 
-
 /**
  * Implementation of the unix "tail -f" functionality, forked from the Apache Commons IO project and providing fixes, c
  * leaner APIs and improved
@@ -54,13 +53,13 @@ import java.nio.channels.Selector;
  * </pre>
  *
  * <h2>2. Using a Tailer</h2>
- *
+ * <p>
  * You can create and use a Tailer in one of three ways:
  * <ul>
- *   <li>Using an {@link java.util.concurrent.Executor}</li>
- *   <li>Using a {@link Thread}</li>
+ * <li>Using an {@link java.util.concurrent.Executor}</li>
+ * <li>Using a {@link Thread}</li>
  * </ul>
- *
+ * <p>
  * An example of each of these is shown below.
  *
  *
@@ -96,11 +95,11 @@ import java.nio.channels.Selector;
  *      tailer.stop();
  * </pre>
  *
- * @see TailerListener
- * @see TailerListenerAdapter
  * @author Apache Commons IO Team
  * @author Sergio Bossa
  * @author thumilan@wso2.com
+ * @see TailerListener
+ * @see TailerListenerAdapter
  */
 public class Tailer extends Thread {
 
@@ -108,7 +107,7 @@ public class Tailer extends Thread {
     /**
      * The file which will be tailed.
      */
-    private final   File file  ;
+    private final File file;
     /**
      * The amount of time to wait for the file to be updated.
      */
@@ -137,7 +136,7 @@ public class Tailer extends Thread {
     /**
      * The recycled buffer for buffered reads.
      */
-    private static  ByteBuffer buffer = null;
+    private static ByteBuffer buffer = null;
 
     /**
      * The Tailer position in the file
@@ -156,6 +155,7 @@ public class Tailer extends Thread {
      * @param listener the TailerListener to use.
      */
     public Tailer(File file, TailerListener listener) {
+
         this(file, listener, 1000);
     }
 
@@ -167,8 +167,10 @@ public class Tailer extends Thread {
      * @param delay    the delay between checks of the file for new content in milliseconds.
      */
     public Tailer(File file, TailerListener listener, long delay) {
+
         this(file, listener, delay, true);
     }
+
     /**
      * Creates a Tailer for the given file, with the default buffer size of 1024 bytes.
      *
@@ -178,6 +180,7 @@ public class Tailer extends Thread {
      * @param end      Set to true to tail from the end of the file, false to tail from the beginning of the file.
      */
     public Tailer(File file, TailerListener listener, long delay, boolean end) {
+
         this(file, listener, delay, end, 512);
     }
 
@@ -191,6 +194,7 @@ public class Tailer extends Thread {
      * @param bufferSize Buffer size for buffered reads from the tailed file.
      */
     public Tailer(File file, TailerListener listener, long delay, boolean end, int bufferSize) {
+
         this.file = file;
         this.delay = delay;
         this.end = end;
@@ -207,13 +211,13 @@ public class Tailer extends Thread {
         logLine = "";
     }
 
-
     /**
      * Return the file.
      *
      * @return the file
      */
     public File getFile() {
+
         return file;
     }
 
@@ -223,6 +227,7 @@ public class Tailer extends Thread {
      * @return the delay
      */
     public long getDelay() {
+
         return delay;
     }
 
@@ -230,6 +235,7 @@ public class Tailer extends Thread {
      * Follows changes in the file, calling the TailerListener's handle method for each new line.
      */
     public void run() {
+
         reader = null;
         FileChannel fileChannel = null;
         try {
@@ -239,7 +245,7 @@ public class Tailer extends Thread {
 
         }
         try {
-             position = 0; // position within the file
+            position = 0; // position within the file
             // Open the file
             while (run && reader == null) {
                 try {
@@ -305,15 +311,11 @@ public class Tailer extends Thread {
 
                     } catch (Exception e) {
 
-
                     }
-
 
                 }
 
             }
-
-
 
             listener.stop();
         } catch (Exception e) {
@@ -337,7 +339,8 @@ public class Tailer extends Thread {
      * @return The new position after the lines have been read
      * @throws IOException if an I/O error occurs.
      */
-    private long readLines(FileChannel fileChannel)  {
+    private long readLines(FileChannel fileChannel) {
+
         long read = 0;
         try {
             read = fileChannel.read(buffer);
@@ -349,7 +352,6 @@ public class Tailer extends Thread {
                 if (charString.compareTo("\n") == 0) {
                     listener.handle(logLine);
                     logLine = "";
-
 
                 }
 
@@ -364,8 +366,8 @@ public class Tailer extends Thread {
         return read;
     }
 
-
     private void closeQuietly(Closeable closeable) {
+
         try {
             if (closeable != null) {
                 closeable.close();
@@ -374,6 +376,7 @@ public class Tailer extends Thread {
             System.out.print("Unable to close the file due to : " + ioe.getMessage());
         }
     }
+
     public static boolean isEnd(String testline) {
 //        String checkLine="";
 //        while (buffer.hasRemaining()) {
@@ -389,9 +392,9 @@ public class Tailer extends Thread {
 //        }
 
         try {
-            long currentposition = position+datalength;
-            //System.out.print(reader.length()+"   :   "+position+"   :   "+currentposition+"  :  "+(!(buffer.hasRemaining())&&((position+512)>(reader.length())))+"  :   "+logLine+"\n");
-            return (!(buffer.hasRemaining())&&((position+512)>(reader.length())));
+            long currentposition = position + datalength;
+            //System.out.print(reader.length() + "   :   " + position + "   :   " + currentposition + "  :  " + (!(buffer.hasRemaining()) && ((position + 512) > (reader.length()))) + "  :   " + logLine + "\n");
+            return (!(buffer.hasRemaining()) && ((position + 512) > (reader.length())));
         } catch (IOException e) {
             e.printStackTrace();
         }

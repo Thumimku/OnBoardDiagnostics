@@ -17,11 +17,10 @@ package com.company;
  *  under the License.
  */
 
-
-
 /**
- *This class used to represent the logLine.
+ * This class used to represent the logLine.
  * Currently not used.
+ *
  * @author thumilan@wso2.com
  */
 public class LogLine {
@@ -30,10 +29,10 @@ public class LogLine {
 
     /**
      * public Constructor.
-     * @param logLine initial logLine
      *
+     * @param logLine initial logLine
      */
-    public LogLine (String logLine) {
+    public LogLine(String logLine) {
 
         data = new StringBuilder();
         data.append(logLine);
@@ -41,6 +40,7 @@ public class LogLine {
 
     /**
      * Get method for the data attribute.
+     *
      * @return actual logLine
      */
 
@@ -51,6 +51,7 @@ public class LogLine {
 
     /**
      * This method used to build the LogLine.
+     *
      * @param testLine current line processed by MatchRuleEngine
      */
     public void buildLogLine(String testLine) {

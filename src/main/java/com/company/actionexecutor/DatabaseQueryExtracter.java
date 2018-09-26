@@ -18,6 +18,7 @@ package com.company.actionexecutor;
  */
 
 import com.company.helper.XmlHelper;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -30,11 +31,11 @@ import java.nio.channels.FileChannel;
  * This class is used to grep database query from timing log.
  * When an error occur interpreter grep the correlation id of the request from wso2carbon.log.
  * From that correlation ID this class greps db queries which related to particular request.
- * @see com.company.Interpreter
  *
+ * @see com.company.Interpreter
+ * <p>
  * Finally it creates DB_Query.txt file which contains all db queries related to particular request.
  * Timing log file path configured in wso2conf.xml file.
- *
  */
 public class DatabaseQueryExtracter {
 
@@ -86,6 +87,7 @@ public class DatabaseQueryExtracter {
 
     /**
      * This method is used to call by Interpreter after extracts the request id in order to find the db logs.
+     *
      * @param requestID - request correlation id
      */
     public void ScanForQuary(String requestID) {
@@ -101,7 +103,7 @@ public class DatabaseQueryExtracter {
                     logExtractedQuery(queryBuilder);
                 }
             } catch (IOException e) {
-                System.out.print("Unable to read timing log file due to "+ e.getMessage());
+                System.out.print("Unable to read timing log file due to " + e.getMessage());
             }
 
         }
@@ -109,6 +111,7 @@ public class DatabaseQueryExtracter {
 
     /**
      * This method is used to
+     *
      * @param fileChannel
      * @param requestID
      * @return
@@ -147,7 +150,7 @@ public class DatabaseQueryExtracter {
     private void logExtractedQuery(StringBuilder queryBuilder) {
 
         try {
-            FileWriter writer = new FileWriter(folderPath + "/" + filename,true);
+            FileWriter writer = new FileWriter(folderPath + "/" + filename, true);
             writer.write(queryBuilder.toString());
             writer.close();
         } catch (IOException e) {

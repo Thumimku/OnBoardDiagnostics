@@ -17,127 +17,47 @@ package com.company;
  *  under the License.
  */
 
-
 import com.company.logtailer.TailerListenerAdapter;
 
 /**
  * This class is used to handle the line which pass from Tailer class.
  *
- * @see TailerListenerAdapter
- * @see TailerListenerAdapter
  * @author thumilan@wso2.com
+ * @see TailerListenerAdapter
  */
 public class LogTailReader extends TailerListenerAdapter {
-
 
     //Initiate MatchRule Engine
     private final MatchRuleEngine matchRuleEngine;
 
-
-
     //constructor - set initial Lof file length 0 and set Log file path;
     public LogTailReader() {
+
         matchRuleEngine = new MatchRuleEngine();
 
     }
 
-
-
-//    public void tailfile() {
-//        //Method used to tail the log file
-//        try {
-//            if (logFilePath != null) {
-//                RandomAccessFile logFile = new RandomAccessFile(logFilePath, "r");
-//                logFileLength = logFile.length();
-//                System.out.print(logFile.length() + "\n");
-//                FileChannel fileChannel = logFile.getChannel();
-//                ByteBuffer byteBuffer = ByteBuffer.allocate(512);
-//
-//
-//                while (true) {
-//                    if (logFile.length() > logFileLength) {
-//                        //Lines added.
-//
-//                        logFile.seek(logFileLength);
-//                        //skip for last read position
-//                        charRead = fileChannel.read(byteBuffer);
-//                        while (charRead != -1) {
-//                            logFileLength = logFile.length();
-//                            byteBuffer.flip();
-//
-//                            while (byteBuffer.hasRemaining()) {
-//                                String charString = String.valueOf((char) byteBuffer.get());
-//                                lineBuilder = lineBuilder + charString;
-//                                if (charString.compareTo("\n") == 0) {
-//                                    matchRuleEngine.validateTestline(lineBuilder);
-//                                    lineBuilder = "";
-//
-//                                }
-//                            }
-//
-//                            byteBuffer.clear();
-//                            charRead = fileChannel.read(byteBuffer);
-//                        }
-//
-//
-//                    } else if (logFile.length() < logFileLength) {
-//                        //file lines deleted need to reset.
-//
-//
-//                        logFileLength = 0L;
-//                        logFile.seek(logFileLength);
-//                        //skip to initial positoin
-//                        charRead = fileChannel.read(byteBuffer);
-//                        while (charRead != -1) {
-//                            logFileLength = logFile.length();
-//                            byteBuffer.flip();
-//
-//                            while (byteBuffer.hasRemaining()) {
-//                                String charString = String.valueOf((char) byteBuffer.get());
-//                                lineBuilder = lineBuilder + charString;
-//                                if (charString.compareTo("\n") == 0) {
-//                                    matchRuleEngine.validateTestline(lineBuilder);
-//                                    lineBuilder = "";
-//
-//                                }
-//                            }
-//
-//                            byteBuffer.clear();
-//                            charRead = fileChannel.read(byteBuffer);
-//                        }
-//
-//                    }
-//
-//
-//                }
-//
-//            }
-//        } catch (FileNotFoundException e) {
-//            System.out.print("File Not Found. Please Check the path");
-//
-//        } catch (IOException e) {
-//            System.out.print("IO error occurred.");
-//
-//        }
-//    }
-
     /**
      * This override method used to implement the logic over the read line.
      * Here new line passed matchRuleEngine.
+     *
      * @param line the line.
      */
     @Override
     public void handle(String line) {
+
         matchRuleEngine.validateTestline(line);
     }
 
     /**
      * Whenever a exception occurs Tailer class pass that certain exception to this method.
      * Here we can handle that exception.
+     *
      * @param ex the exception.
      */
     @Override
     public void error(Exception ex) {
+
         System.out.print(ex.getMessage());
     }
 }

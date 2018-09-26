@@ -15,7 +15,7 @@ package com.company.actionexecutor;
  *  KIND, either express or implied.  See the License for the
  *  specific language governing permissions and limitations
  *  under the License.
-*/
+ */
 
 import java.io.File;
 import java.io.FileWriter;
@@ -23,49 +23,39 @@ import java.io.IOException;
 
 /**
  * LogLineWriter used to print the logLines into the time-stamped folder.
- * ActionExecutor interface is implemented for code reuse.
- * @see ActionExecutor
+ * PostExecutor interface is implemented for code reuse.
  *
  * @author thumilan@wso2.com
+ * @see PostExecutor
  */
-public class LogLineWriter implements ActionExecutor {
-
+public class LogLineWriter {
 
     /**
-     *public Constructor.
+     * public Constructor.
      */
-
 
     public LogLineWriter() {
 
-
     }
-
-
-
-
 
     /**
      * This method is used to write the log line into destination file and zip the folder.
+     *
      * @param logLine the line
      */
-    @Override
+
     public void execute(StringBuilder logLine, String path) {
+
         File folder = new File(path);
 
         try {
-            FileWriter writer = new FileWriter(path + "/" + folder.getName() + ".txt",true);
+            FileWriter writer = new FileWriter(path + "/" + folder.getName() + ".txt", true);
             writer.write(logLine.toString());
             writer.close();
         } catch (IOException e) {
 
         }
 
-
     }
-
-
-
-
 
 }
