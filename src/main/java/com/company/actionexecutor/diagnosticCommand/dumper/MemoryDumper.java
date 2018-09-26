@@ -18,7 +18,6 @@ package com.company.actionexecutor.diagnosticCommand.dumper;
  */
 
 import com.company.actionexecutor.diagnosticCommand.ActionExecutor;
-
 import java.io.File;
 import java.io.IOException;
 

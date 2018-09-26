@@ -68,7 +68,9 @@ public class Interpreter {
 
     /**
      * Method used to interpret logLine.
-     *
+     * This method checks the validity of the error line.
+     * Valid error log lines will go under diagnosis process.
+     * If the diagnosis succeeds then certain dump files and error log line will be dumped at time stamped folder.
      * @param logLine error log line
      */
     public void interpret(StringBuilder logLine) {
@@ -80,7 +82,7 @@ public class Interpreter {
                 //Write the error log line into the folder
                 this.writeLogLine(logLine);
                 //Zip the folder
-                this.executeZipFileExecuter();
+                //this.executeZipFileExecuter();
 
             }
 
@@ -92,7 +94,7 @@ public class Interpreter {
      * This method used to diagnose error.
      * First  match error regex to find the error.
      * Then check whether the error occurred recently or not.
-     * Finlly do the analysis.
+     * Finally do the analysis.
      *
      * @param logLine error line
      * @return
@@ -120,6 +122,7 @@ public class Interpreter {
     /**
      * This method is used to do analysis.
      * First get diagnose json array and invoke certain action executor
+     *
      * @param testRegex errorRegex
      */
     private void doAnalysis(String testRegex) {
@@ -135,7 +138,8 @@ public class Interpreter {
     }
 
     /**
-     * Thsi method used to check validity of the error.
+     * This method used to check validity of the error.
+     *
      * @param logLine error log
      * @return
      */
@@ -189,13 +193,14 @@ public class Interpreter {
 
     /**
      * This method is used to call LogLine Writer to write the log line.
+     *
      * @param Logline
      */
     public void writeLogLine(StringBuilder Logline) {
 
         LogLineWriter logLineWriter = new LogLineWriter();
         logLineWriter.execute(Logline, folderpath);
-        System.out.print("Error Dumped in :"+folderpath+"\n");
+        System.out.print("Error Dumped in :" + folderpath + "\n");
     }
 
     /**
@@ -210,14 +215,18 @@ public class Interpreter {
     /**
      * This method is used to check current error time and previous time when the same error occurred.
      * It also return whether tool has to do analysis for current error.
+     *
      * @param testline error line
-     * @param error error type
+     * @param error    error type
      * @return
      */
     private boolean checkErrorTime(String testline, String error) {
 
+        //Grep the first line of the error line.
         String[] errorLine = testline.split("\n");
+
         Pattern pattern = Pattern.compile(XmlHelper.TimeRegex);
+
         Matcher matcher = pattern.matcher(errorLine[0]);
         if (matcher.find()) {
 
@@ -241,6 +250,7 @@ public class Interpreter {
 
     /**
      * This method is used to calculate current error time form log line.
+     *
      * @param timeStr
      * @return
      */

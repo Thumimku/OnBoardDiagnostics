@@ -34,7 +34,6 @@ import com.company.actionexecutor.diagnosticCommand.dumper.ThreadDumper;
  * Now you created printLineExecutor instance.
  *
  * @author thumilan@wso2.com
- * @see PostExecutor
  */
 public class ActionExecutorFactory {
 
