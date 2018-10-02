@@ -26,6 +26,8 @@ import com.company.actionexecutor.diagnosticCommand.dumper.MemoryDumper;
 import com.company.actionexecutor.diagnosticCommand.dumper.ServerProcess;
 import com.company.actionexecutor.diagnosticCommand.dumper.ThreadDumper;
 
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * This Factory class used to create various Executors using Factory Design pattern.
  * Ex:-
@@ -45,28 +47,42 @@ public class ActionExecutorFactory {
      */
     public ActionExecutor getActionExecutor(String executorType) {
 
-        if (executorType == null) { // input string is null so method returs null object
-            return null;
-        } else if (executorType.equalsIgnoreCase("MemoryDump")) {
-            // check the input string and return printLineExecutor instance
-            return new MemoryDumper(new ServerProcess().getProcessId());
-        } else if (executorType.equalsIgnoreCase("lsof")) {
-            // check the input string and return zipLineExecutor instance
-            return new OpenFileFinder(new ServerProcess().getProcessId());
-        } else if (executorType.equalsIgnoreCase("databaseConnectionScanner")) {
-            // check the input string and return zipLineExecutor instance
-            return new DatabaseConnectionScanner();
-        } else if (executorType.equalsIgnoreCase("ThreadDump")) {
-            // check the input string and return zipLineExecutor instance
-            return new ThreadDumper(new ServerProcess().getProcessId());
-        } else if (executorType.equalsIgnoreCase("netstat")) {
-            // check the input string and return zipLineExecutor instance
-            return new NetstatExecuter();
-        } else {
-            // if input string doesn't match any above cases, invalid input return null.
-            return null;
+//        if (executorType == null) { // input string is null so method returs null object
+//            return null;
+//        } else if (executorType.equalsIgnoreCase("MemoryDump")) {
+//            // check the input string and return printLineExecutor instance
+//            return new MemoryDumper(new ServerProcess().getProcessId());
+//        } else if (executorType.equalsIgnoreCase("lsof")) {
+//            // check the input string and return zipLineExecutor instance
+//            return new OpenFileFinder(new ServerProcess().getProcessId());
+//        } else if (executorType.equalsIgnoreCase("databaseConnectionScanner")) {
+//            // check the input string and return zipLineExecutor instance
+//            return new DatabaseConnectionScanner();
+//        } else if (executorType.equalsIgnoreCase("ThreadDump")) {
+//            // check the input string and return zipLineExecutor instance
+//            return new ThreadDumper(new ServerProcess().getProcessId());
+//        } else if (executorType.equalsIgnoreCase("netstat")) {
+//            // check the input string and return zipLineExecutor instance
+//            return new NetstatExecuter();
+//        } else {
+//            // if input string doesn't match any above cases, invalid input return null.
+//            return null;
+//        }
+        try {
+            return (ActionExecutor) Class.forName(executorType).getConstructor(String.class).newInstance();
+        } catch (NoSuchMethodException e) {
+            System.out.print("Invalid executor configured as "+executorType+" . Unable to load the class");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
         }
 
+        return null;
     }
 
 }

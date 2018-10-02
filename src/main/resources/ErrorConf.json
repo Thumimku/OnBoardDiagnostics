@@ -5,11 +5,11 @@
     "regex":"java\\.lang\\.OutOfMemoryError",
     "diagnosis":[
       {
-        "executor":"MemoryDump",
+        "executor":"MemoryDumper",
         "reloadTime":"150"
       },
       {
-        "executor":"lsof",
+        "executor":"OpenFileFinder",
         "reloadTime":"150"
       }
 
@@ -22,7 +22,7 @@
     "regex": "\\{org\\.wso2\\.carbon\\.server\\.admin\\.module\\.handler\\.AuthenticationHandler\\}\\ -\\ \\ org\\.apache\\.tomcat\\.jdbc\\.pool\\.PoolExhaustedException:",
     "diagnosis": [
       {
-        "executor": "databaseConnectionScanner",
+        "executor": "DatabaseConnectionScanner",
         "reloadTime": "150"
       }
     ]

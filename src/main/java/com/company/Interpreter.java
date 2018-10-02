@@ -128,10 +128,13 @@ public class Interpreter {
     private void doAnalysis(String testRegex) {
 
         JSONArray errorJsonArray = (JSONArray) ErrorInfo.getErrorDiagnosis(testRegex);
-        for (Object errorObject : errorJsonArray) {
-            JSONObject errorJsonObject = (JSONObject) errorObject;
+        for (Object object:errorJsonArray){
+            JSONObject errorJsonObject = (JSONObject) object;
             ActionExecutor actionExecutor = actionExecutorFactory.getActionExecutor(errorJsonObject.get("executor").toString());
-            actionExecutor.execute(this.folderpath);
+            if (actionExecutor != null) {
+                actionExecutor.execute(this.folderpath);
+            }
+
 
         }
 
@@ -176,6 +179,7 @@ public class Interpreter {
 
         // folder name set as timestamp
         String foldername = new Timestamp(System.currentTimeMillis()).toString().replace(" ", "_");
+        foldername = "WSO2_IS_@_"+foldername;
         File dumpFolder = new File(folderpath + foldername);
         if (!dumpFolder.exists()) {
             try {
@@ -263,115 +267,3 @@ public class Interpreter {
         return (hour * 3600) + (minute * 60) + second;
     }
 }
-//    /**
-//     * This method checks whether current testLine is match with Oom error regex.
-//     *
-//     * @param testLine the line.
-//     * @return boolean - true if matches.
-//     */
-//    private boolean checkOomErrorMatch(String testLine) {
-//
-//        pattern = Pattern.compile(XmlHelper.OOMErrorRegex);
-//        matcher = pattern.matcher(testLine);
-//        return matcher.find();
-//    }
-//
-//    /**
-//     * This method checks whether current testLine is match with Oom error regex.
-//     *
-//     * @param testLine the line.
-//     * @return boolean - true if matches.
-//     */
-//    private boolean checkPoolExhaustedMatch(String testLine) {
-//
-//        pattern = Pattern.compile(XmlHelper.DbConnectionError);
-//        matcher = pattern.matcher(testLine);
-//        return matcher.find();
-//    }
-//    public void executelsof() {
-//
-//        OpenFileFinder openFileFinder = new OpenFileFinder(new ServerProcess().getProcessId());
-//        openFileFinder.dolsof(folderpath);
-//
-//    }//    /**
-////     * This method create ThreadDumper instance and do thread dump.
-////     * java process of wso2 server is referenced as ServerProcess
-////     */
-////    public void doThreadDump() {
-////
-////        ThreadDumper threadDumper = new ThreadDumper(new ServerProcess().getProcessId());
-////        threadDumper.doThreadDumping(folderpath);
-////    }
-////
-////    public void doMemoryDump() {
-////
-////        MemoryDumper memoryDumper = new MemoryDumper(new ServerProcess().getProcessId());
-////        memoryDumper.doMemoryDumping(folderpath);
-////
-////    }
-////
-////    public void doNetstat() {
-////
-////        NetstatExecuter netstatExecuter = new NetstatExecuter();
-////        netstatExecuter.donetstat(folderpath);
-////    }
-////
-////    public void doDBQueryDump() {
-////
-////        if (requestID != null) {
-////            DatabaseQueryExtracter databaseQueryExtracter = new DatabaseQueryExtracter(folderpath);
-////            databaseQueryExtracter.ScanForQuary(requestID);
-////        }
-////
-////    }
-////
-////    public String getFolderpath() {
-////
-////        return folderpath;
-////    }
-//public void extractRequestID(String testLine) {
-//
-//    Pattern pattern = Pattern.compile(XmlHelper.UuidRegex);
-//    Matcher matcher = pattern.matcher(testLine);
-//    if (matcher.find()) {
-//        requestID = matcher.group(1);
-//    }
-//}
-//    private void doDbConnectionScan() {
-//
-//        DatabaseConnectionScanner databaseConnectionScanner = new DatabaseConnectionScanner();
-//        if(databaseConnectionScanner.doScan()){
-//            System.out.print("\tDatabase connection port is Alive\n");
-//        }else{
-//            System.out.print("\tDatabase connection port is not Alive. Need to check Database server is running or not.\n");
-//        }
-//
-//    }
-//                if (checkOomErrorMatch(logLine.toString())) {
-//                    if (checkErrorTime(logLine.toString(),"OOM")){
-//                        System.out.print("OOM error occurred........\n");
-//                        this.createFolder();
-//                        System.out.print("\tInitiating Memory Dumping.......\n");
-//                        this.doMemoryDump();
-//                        System.out.print("\tScanning Open files.......\n");
-//                        this.executelsof();
-//                        System.out.print("\tLogging Error line........\n");
-//                        this.writeLogLine(logLine);
-//                        System.out.print("All diagnosis are completed and logged in "+this.folderpath+"\n\n\n");
-//                        this.executeZipFileExecuter();
-//                    }
-//
-//                } else if (checkPoolExhaustedMatch(logLine.toString())) {
-//                    if (checkErrorTime(logLine.toString(),"PoolExhausted")){
-//                        System.out.print("Pool Exhausted Exception Occurred........\n");
-//                        this.createFolder();
-//                        System.out.print("\tChecking Database Connection.......\n");
-//                        this.doDbConnectionScan();
-//                        System.out.print("\tLogging Error line.......\n");
-//                        this.writeLogLine(logLine);
-//                        System.out.print("All diagnosis are completed and logged in "+this.folderpath+"........\n\n\n");
-//                        this.executeZipFileExecuter();
-//                    }
-//
-//                }
-// System.out.print(logLine.toString());
