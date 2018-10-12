@@ -33,7 +33,7 @@ import java.util.zip.ZipOutputStream;
  * @author thumilan@wso2.com
  * @see PostExecutor
  */
-public class ZipFileExecutor   {
+public class ZipFileExecutor {
 
     /**
      * public Constructor.

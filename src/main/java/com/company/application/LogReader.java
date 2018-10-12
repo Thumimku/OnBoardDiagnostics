@@ -1,4 +1,4 @@
-package com.company;
+package com.company.application;
 /*
  * Copyright (c) 2005-2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -17,6 +17,7 @@ package com.company;
  *  under the License.
  */
 
+import com.company.logtailer.Tailer;
 import com.company.logtailer.TailerListenerAdapter;
 
 /**
@@ -25,13 +26,15 @@ import com.company.logtailer.TailerListenerAdapter;
  * @author thumilan@wso2.com
  * @see TailerListenerAdapter
  */
-public class LogTailReader extends TailerListenerAdapter {
+public class LogReader extends TailerListenerAdapter {
 
     //Initiate MatchRule Engine
-    private final MatchRuleEngine matchRuleEngine;
+    private  MatchRuleEngine matchRuleEngine;
+
+    private Tailer tailer;
 
     //constructor - set initial Lof file length 0 and set Log file path;
-    public LogTailReader() {
+    public LogReader() {
 
         matchRuleEngine = new MatchRuleEngine();
 
@@ -45,8 +48,9 @@ public class LogTailReader extends TailerListenerAdapter {
      */
     @Override
     public void handle(String line) {
+        //System.out.print(line);
 
-        matchRuleEngine.validateTestline(line);
+        matchRuleEngine.validateTestline(line,this.tailer);
     }
 
     /**
@@ -59,5 +63,11 @@ public class LogTailReader extends TailerListenerAdapter {
     public void error(Exception ex) {
 
         System.out.print(ex.getMessage());
+    }
+
+    @Override
+    public void init(Tailer tailer) {
+
+        this.tailer=tailer;
     }
 }

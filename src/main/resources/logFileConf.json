@@ -1,0 +1,10 @@
+[
+  {
+    "filename":"WSO2 Carbon Log File",
+    "fileId":"file1",
+    "filePath":"/home/thumilan/WSO2/RC3/wso2is-5.7.0/repository/logs/wso2carbon.log",
+    "regexTreeFileName":"RegexTree.json",
+    "startRegex":"ERROR",
+    "endRegex":"INFO"
+  }
+]

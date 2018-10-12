@@ -4,7 +4,7 @@
     <!--WSO2 timing.log file  <IS_HOME>/repository/logs/timing.log-->
     <!--If you don't have this feature keep the tags with empty body. Don't delete the tags-->
     <!--You can add this feature -->
-    <timingPath>/home/thumilan/WSO2/RC3/wso2is-5.7.0/repository/logs/timing.log</timingPath>
+    <correlationtimingPath>/home/thumilan/WSO2/RC3/wso2is-5.7.0/repository/logs/correlation.log</correlationtimingPath>
     <!--WSO2 server java process id path <IS_HOME/wso2carbon.pid>-->
     <pidpath>/home/thumilan/WSO2/RC3/wso2is-5.7.0/wso2carbon.pid</pidpath>
 </conf>

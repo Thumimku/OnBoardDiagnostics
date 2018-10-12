@@ -1,4 +1,4 @@
-package com.company.actionexecutor;
+package com.company.application;
 /*
  * Copyright (c) 2005-2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -17,7 +17,10 @@ package com.company.actionexecutor;
  *  under the License.
  */
 
+import com.company.application.Interpreter;
 import com.company.helper.XmlHelper;
+import com.company.logtailer.Tailer;
+import com.company.logtailer.TailerListenerAdapter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -32,12 +35,12 @@ import java.nio.channels.FileChannel;
  * When an error occur interpreter grep the correlation id of the request from wso2carbon.log.
  * From that correlation ID this class greps db queries which related to particular request.
  *
- * @see com.company.Interpreter
+ * @see Interpreter
  * <p>
  * Finally it creates DB_Query.txt file which contains all db queries related to particular request.
  * Timing log file path configured in wso2conf.xml file.
  */
-public class DatabaseQueryExtracter {
+public class DatabaseQueryReader extends TailerListenerAdapter {
 
     private RandomAccessFile timingLog; // timing log file.
 
@@ -60,20 +63,19 @@ public class DatabaseQueryExtracter {
     /**
      * Public constructor with allocated buffer size of 512.
      *
-     * @param folderPath - dump folder path.
      */
-    public DatabaseQueryExtracter(String folderPath) {
+    public DatabaseQueryReader() {
 
         this.buffer = ByteBuffer.allocate(512);
 
-        if (new File(XmlHelper.TimingLogPath).exists()) {
+        if (new File(XmlHelper.CorrelationLogPath).exists()) {
             try {
-                this.timingLog = new RandomAccessFile(XmlHelper.TimingLogPath, "r");
+                this.timingLog = new RandomAccessFile(XmlHelper.CorrelationLogPath, "r");
                 this.timingLogChannel = timingLog.getChannel();
                 this.position = 0;
                 this.filesize = 0;
                 this.queryBuilder = new StringBuilder();
-                this.folderPath = folderPath;
+
 
             } catch (FileNotFoundException e) {
                 System.out.print("unable to find timing log");
@@ -158,4 +160,33 @@ public class DatabaseQueryExtracter {
         }
     }
 
+    @Override
+    public void init(Tailer tailer) {
+
+
+
+    }
+
+    @Override
+    public void stop() {
+
+
+    }
+
+    @Override
+    public void fileNotFound() {
+
+
+    }
+
+    @Override
+    public void handle(String line) {
+
+        System.out.print(line);
+    }
+
+    @Override
+    public void error(Exception ex) {
+
+    }
 }

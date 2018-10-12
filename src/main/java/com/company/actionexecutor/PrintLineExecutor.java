@@ -27,7 +27,7 @@ package com.company.actionexecutor;
  * @author thumilan@wso2.com
  * @see PostExecutor
  */
-public class PrintLineExecutor   {
+public class PrintLineExecutor {
 
     /**
      * public Constructor.

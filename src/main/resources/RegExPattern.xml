@@ -10,9 +10,5 @@
 
     <!--<GeneralInfoRegex>TID:\ \[\d*\]\ \[\]\ \[\d\d\d\d\-\d\d\-\d\d\ \d\d\:\d\d\:\d\d\,\d+\]\ \@hindscc\.edu\ \[\d*\]\ \[IS\]\ INFO</GeneralInfoRegex>-->
 
-    <uuidRegex>........-....-....-....-............</uuidRegex>
-
-    <errorRegex>ERROR(.*)</errorRegex>
-
     <timeRegex>\d\d:\d\d:\d\d,\d\d\d</timeRegex>
 </pattern>

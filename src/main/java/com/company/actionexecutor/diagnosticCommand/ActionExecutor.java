@@ -1,9 +1,15 @@
 package com.company.actionexecutor.diagnosticCommand;
 
-public interface ActionExecutor {
+public abstract class ActionExecutor {
+
     /**
      * This method called by executor to do the execution.
      */
-    void execute( String folderpath);
+
+
+    public abstract void execute(String folderpath);
+
+
+
 
 }

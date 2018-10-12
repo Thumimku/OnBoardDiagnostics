@@ -1,4 +1,4 @@
-package com.company.actionexecutor.diagnosticCommand.dumper;
+package com.company.actionexecutor.diagnosticCommand;
 /*
  * Copyright (c) 2005-2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -17,7 +17,9 @@ package com.company.actionexecutor.diagnosticCommand.dumper;
  *  under the License.
  */
 
-import com.company.actionexecutor.diagnosticCommand.ActionExecutor;
+import com.company.regexTree.ErrorRegexNode;
+import com.company.regexTree.ErrorRegexTree;
+import org.json.simple.JSONObject;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -33,7 +35,7 @@ import java.util.Scanner;
  * <p>
  * This class use Java Runtinme enviroment and jstack command to do thread dump.
  */
-public class ThreadDumper implements ActionExecutor {
+public class ThreadDumper extends ActionExecutor {
 
     /**
      * This string is used to represent process id.
@@ -42,15 +44,19 @@ public class ThreadDumper implements ActionExecutor {
     /**
      * This integer is used to store thread dump file suffix.
      */
-    private Integer fileSuffix;
+    private Integer fileSuffix = 1;
     /**
      * This long is used to refer delay between thread dumps.
      */
-    private long delay;
+    private  long delay;
     /**
      * This int is used to refer how many thread dumps needed.
      */
-    private int threadDumpCount;
+    private  int threadDumpCount;
+
+    private ErrorRegexNode root;
+
+    private JSONObject configuration  ;
 
     /**
      * Creates Thread Dumper with process id and delay.
@@ -100,6 +106,18 @@ public class ThreadDumper implements ActionExecutor {
 
     }
 
+    public ThreadDumper() {
+
+        this.processid = new ServerProcess().getProcessId();
+        //this(new ServerProcess().getProcessId());
+        if (configuration == null) {
+            configuration = ErrorRegexTree.root.getconfiguration("ThreadDumper");
+            threadDumpCount = Integer.parseInt(configuration.get("count").toString());
+            delay = Integer.parseInt(configuration.get("delay").toString());
+        }
+
+    }
+
     /**
      * Method used to do thread dump with using Java Runtime Environment and jstack command.
      * Currently its written for linux environment.
@@ -111,8 +129,7 @@ public class ThreadDumper implements ActionExecutor {
 
         if (new File(folderpath).exists()) { // check whether file exists before dumping.
             String commandFrame = System.getenv("JAVA_HOME") + "/bin/jstack " + processid;
-            System.out.print("\t Thread DUmp Successfully Dumped.\n");
-
+            System.out.print("\t Thread Dump Successfully Dumped.\n");
 
             for (int counter = threadDumpCount; counter > 0; counter--) {
                 try {

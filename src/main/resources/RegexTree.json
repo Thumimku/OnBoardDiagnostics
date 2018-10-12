@@ -1,62 +1,118 @@
 {
-  "Description": "node001",
+  "Id": "node1",
+  "Description": "Root Node",
   "Children": [
     {
-      "Description": "node002",
+      "Id": "node11",
+      "Description": "This node is used to find java lang error.",
       "Regex": [
-        "java",
-        "lang",
-        "OutOfMemory",
-        "Error"
-      ],
-      "Diagnosis": [
-        {
-          "Executor": "MemoryDumper",
-          "ReloadTime": "150"
-        }
+        "java.lang"
       ],
       "Children": [
         {
-          "Description": "node003",
+          "Id": "node111",
+          "Description": "This node is used to find OutOfMemory Error.",
           "Regex": [
-            "PoolExhaustedException"
+            "OutOfMemory"
           ],
+
           "Diagnosis": [
             {
-              "Executor": "OpenFileFinder",
-              "ReloadTime": "150"
+              "Executor": "MemoryDumper"
+            },
+            {
+              "Executor": "OpenFileFinder"
+            }
+          ]
+        },
+        {
+          "Id": "node112",
+          "Description": "This node is used to find ThreadDeath Error.",
+          "Regex": [
+            "ThreadDeath"
+          ],
+
+          "Diagnosis": [
+            {
+              "Executor": "ThreadDumper"
             }
           ]
         }
       ]
     },
     {
-      "Description": "node004",
+      "Id": "node12",
+      "Description": "This node is used to find PoolExhaustedException Error.",
+      "Regex": [
+        "PoolExhaustedException"
+      ],
+
+      "Diagnosis": [
+        {
+          "Executor": "OpenFileFinder"
+        },
+        {
+          "Executor": "NetstatExecuter"
+        }
+      ]
+    },
+    {
+      "Id": "node13",
+      "Description": "This is a test node",
       "Regex": [
         "jake",
         "jore"
       ],
+
       "Diagnosis": [
         {
-          "Executor": "MemoryDumper",
-          "ReloadTime": "150"
+          "Executor": "MemoryDumper"
         }
       ],
       "Children": [
         {
-          "Description": "node005",
+          "Id": "node131",
+          "Description": "This is a test node",
           "Regex": [
-            "Kool","look"
+            "Kool",
+            "look"
           ],
+
           "Diagnosis": [
             {
-              "Executor": "OpenFileFinder",
-              "ReloadTime": "150"
+              "Executor": "OpenFileFinder"
             }
           ]
         }
       ]
     }
+  ],
+
+  "ActionExecutorConfiguration": [
+    {
+      "Executor": "MemoryDumper",
+      "ReloadTime": "200"
+    },
+    {
+      "Executor": "ThreadDumper",
+      "ReloadTime": "200",
+      "count":"10",
+      "delay":"2000"
+    },
+    {
+      "Executor": "OpenFileFinder",
+      "ReloadTime": "200"
+    },
+    {
+      "Executor": "NetstatExecuter",
+      "ReloadTime": "200"
+    },
+    {
+      "Executor": "DatabaseConnectionScanner",
+      "ReloadTime": "200"
+    }
   ]
 }
+
+
 

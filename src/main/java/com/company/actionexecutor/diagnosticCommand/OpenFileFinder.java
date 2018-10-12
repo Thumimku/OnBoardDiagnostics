@@ -27,7 +27,9 @@ import java.util.Scanner;
  *
  * @author thumilan@wso2.com
  */
-public class OpenFileFinder implements ActionExecutor{
+public class OpenFileFinder extends ActionExecutor {
+
+
 
     /**
      * This string is used to represent process id.
@@ -36,12 +38,10 @@ public class OpenFileFinder implements ActionExecutor{
 
     /**
      * Creates MemoryDumper with process id.
-     *
-     * @param processId process id which used for memory dumping
      */
-    public OpenFileFinder(String processId) {
+    public OpenFileFinder() {
 
-        this.processId = processId;
+        this.processId = new ServerProcess().getProcessId();
 
     }
 
@@ -82,4 +82,5 @@ public class OpenFileFinder implements ActionExecutor{
         }
 
     }
+
 }

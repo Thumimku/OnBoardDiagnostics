@@ -103,7 +103,7 @@ import java.nio.channels.Selector;
  */
 public class Tailer extends Thread {
 
-    private static String logLine;
+    private  String logLine;
     /**
      * The file which will be tailed.
      */
@@ -136,16 +136,16 @@ public class Tailer extends Thread {
     /**
      * The recycled buffer for buffered reads.
      */
-    private static ByteBuffer buffer = null;
+    private  ByteBuffer buffer = null;
 
     /**
      * The Tailer position in the file
      */
-    private static long position;
+    private  long position;
 
-    private static RandomAccessFile reader;
+    private  RandomAccessFile reader;
 
-    private static long datalength;
+    private  long datalength;
 
     /**
      * Creates a Tailer for the given file, starting from the beginning, with the default delay of 1.0s,
@@ -377,7 +377,7 @@ public class Tailer extends Thread {
         }
     }
 
-    public static boolean isEnd(String testline) {
+    public  boolean isEnd(String testline) {
 //        String checkLine="";
 //        while (buffer.hasRemaining()) {
 //            String charString = String.valueOf((char) buffer.get());

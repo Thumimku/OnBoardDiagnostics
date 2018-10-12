@@ -25,22 +25,21 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 /**
- * Database connection scanner class is used to check whether external database connection is established or not.
+ *
  *
  * @author thumilan@wso2.com
  */
-public class DatabaseConnectionScanner extends ActionExecutor {
+public class DbQueryExtractor extends ActionExecutor {
 
     /**
-     * Creates MemoryDumper with process id.
+     *
      */
-    public DatabaseConnectionScanner() {
+    public DbQueryExtractor() {
 
     }
 
-
     /**
-     * Method used to do scan db connection.
+     *
      */
     @Override
     public void execute(String folderpath) {
@@ -65,7 +64,5 @@ public class DatabaseConnectionScanner extends ActionExecutor {
         }
 
     }
-
-
-
 }
+

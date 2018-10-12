@@ -45,16 +45,9 @@ public class XmlHelper {
     public static String generalErrorRegex;
 
     public static String PIdFilePath;
-    //static string regex;
-    public static String ErrorRegex;
-    //static string regex;
-    public static String UuidRegex;
-    //static string regex;
-    public static String TimingLogPath;
-    //static string regex;
-    public static String OOMErrorRegex;
 
-    public static String DbConnectionError;
+    //static string regex;
+    public static String CorrelationLogPath;
 
     public static String TimeRegex;
 
@@ -68,11 +61,10 @@ public class XmlHelper {
             normaliseconfFile();
             generalInfoRegex = regexDocument.getElementsByTagName("GeneralInfoRegex").item(0).getTextContent();
             generalErrorRegex = regexDocument.getElementsByTagName("GeneralErrorRegex").item(0).getTextContent();
-            ErrorRegex = regexDocument.getElementsByTagName("errorRegex").item(0).getTextContent();
-            UuidRegex = regexDocument.getElementsByTagName("uuidRegex").item(0).getTextContent();
-            OOMErrorRegex = regexDocument.getElementsByTagName("OomErrorRegex").item(0).getTextContent();
+
+
             PIdFilePath = confDocument.getElementsByTagName("pidpath").item(0).getTextContent();
-            TimingLogPath = confDocument.getElementsByTagName("timingPath").item(0).getTextContent();
+            CorrelationLogPath = confDocument.getElementsByTagName("correlationtimingPath").item(0).getTextContent();
             TimeRegex = regexDocument.getElementsByTagName("timeRegex").item(0).getTextContent();
 
         } catch (ParserConfigurationException e) {
@@ -194,24 +186,8 @@ public class XmlHelper {
         return confDocument.getElementsByTagName("timingPath").item(0).getTextContent();
     }
 
-    /**
-     * Used to get oom error regex pattern.
-     *
-     * @return String - oom error Regex pattern
-     */
-    public String getUuidRegEx() {
 
-        return regexDocument.getElementsByTagName("uuidRegex").item(0).getTextContent();
-    }
 
-    /**
-     * Used to get oom error regex pattern.
-     *
-     * @return String - oom error Regex pattern
-     */
-    public String getErrorRegEx() {
 
-        return regexDocument.getElementsByTagName("errorRegex").item(0).getTextContent();
-    }
 
 }

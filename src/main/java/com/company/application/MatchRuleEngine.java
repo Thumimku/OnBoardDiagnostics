@@ -1,4 +1,4 @@
-package com.company;
+package com.company.application;
 
 /*
  * Copyright (c) 2005-2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -18,6 +18,7 @@ package com.company;
  *  under the License.
  */
 
+import com.company.application.Interpreter;
 import com.company.helper.XmlHelper;
 import com.company.logtailer.Tailer;
 
@@ -32,9 +33,9 @@ import java.util.regex.Pattern;
 
 public class MatchRuleEngine {
 
-    private String generalErrorRegex; // general error regex
+    private String generalStartRegex; // general error regex
 
-    private String generalInfoRegex; // general info regex
+    private String generalEndRegex; // general info regex
 
     private Interpreter interpreter; // initiate Interpreter
 
@@ -48,12 +49,11 @@ public class MatchRuleEngine {
 
     private StringBuilder logLine; // LogLine object initiated
 
-
     public MatchRuleEngine() {
 
         this.hasEngineApproved = false;
-        this.generalInfoRegex = XmlHelper.generalInfoRegex;
-        this.generalErrorRegex = XmlHelper.generalErrorRegex;
+        this.generalEndRegex = XmlHelper.generalInfoRegex;
+        this.generalStartRegex = XmlHelper.generalErrorRegex;
         this.interpreter = new Interpreter();
         this.enableTailerCheck = true;
     }
@@ -66,7 +66,7 @@ public class MatchRuleEngine {
      */
     private boolean checkInitialErrorMatch(String testLine) {
 
-        pattern = Pattern.compile(generalErrorRegex);
+        pattern = Pattern.compile(generalStartRegex);
         matcher = pattern.matcher(testLine);
         return matcher.find();
     }
@@ -79,7 +79,7 @@ public class MatchRuleEngine {
      */
     private boolean checkInitialInfoMatch(String testLine) {
 
-        pattern = Pattern.compile(generalInfoRegex);
+        pattern = Pattern.compile(generalEndRegex);
         matcher = pattern.matcher(testLine);
         return matcher.find();
     }
@@ -90,7 +90,7 @@ public class MatchRuleEngine {
      *
      * @param testLine the current line.
      */
-    public void validateTestline(String testLine) {
+    public void validateTestline(String testLine,Tailer tailer) {
 
         if (hasEngineApproved) { // previous lines were approved by the engine.
 
@@ -115,9 +115,9 @@ public class MatchRuleEngine {
                     interpreter.interpret(logLine);
                 }
 
-            }
-            else if (enableTailerCheck) {
-                if (Tailer.isEnd(testLine)) {
+            } else if (enableTailerCheck) {
+                //System.out.print(testLine);
+                if (tailer.isEnd(testLine)) {
                     hasEngineApproved = false;
                     logLine.append(testLine);
                     if (interpreter != null) {
@@ -143,7 +143,6 @@ public class MatchRuleEngine {
                 logLine = new StringBuilder();
                 logLine.append(testLine);
                 enableTailerCheck = true;
-
 
             }
         }

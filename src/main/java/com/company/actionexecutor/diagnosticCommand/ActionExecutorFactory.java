@@ -17,15 +17,6 @@ package com.company.actionexecutor.diagnosticCommand;
  *  under the License.
  */
 
-import com.company.actionexecutor.PostExecutor;
-import com.company.actionexecutor.diagnosticCommand.ActionExecutor;
-import com.company.actionexecutor.diagnosticCommand.DatabaseConnectionScanner;
-import com.company.actionexecutor.diagnosticCommand.NetstatExecuter;
-import com.company.actionexecutor.diagnosticCommand.OpenFileFinder;
-import com.company.actionexecutor.diagnosticCommand.dumper.MemoryDumper;
-import com.company.actionexecutor.diagnosticCommand.dumper.ServerProcess;
-import com.company.actionexecutor.diagnosticCommand.dumper.ThreadDumper;
-
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -47,31 +38,11 @@ public class ActionExecutorFactory {
      */
     public ActionExecutor getActionExecutor(String executorType) {
 
-//        if (executorType == null) { // input string is null so method returs null object
-//            return null;
-//        } else if (executorType.equalsIgnoreCase("MemoryDump")) {
-//            // check the input string and return printLineExecutor instance
-//            return new MemoryDumper(new ServerProcess().getProcessId());
-//        } else if (executorType.equalsIgnoreCase("lsof")) {
-//            // check the input string and return zipLineExecutor instance
-//            return new OpenFileFinder(new ServerProcess().getProcessId());
-//        } else if (executorType.equalsIgnoreCase("databaseConnectionScanner")) {
-//            // check the input string and return zipLineExecutor instance
-//            return new DatabaseConnectionScanner();
-//        } else if (executorType.equalsIgnoreCase("ThreadDump")) {
-//            // check the input string and return zipLineExecutor instance
-//            return new ThreadDumper(new ServerProcess().getProcessId());
-//        } else if (executorType.equalsIgnoreCase("netstat")) {
-//            // check the input string and return zipLineExecutor instance
-//            return new NetstatExecuter();
-//        } else {
-//            // if input string doesn't match any above cases, invalid input return null.
-//            return null;
-//        }
         try {
-            return (ActionExecutor) Class.forName(executorType).getConstructor(String.class).newInstance();
+            String classnameShell = "com.company.actionexecutor.diagnosticCommand.";
+            return (ActionExecutor) Class.forName(classnameShell + executorType).getConstructor().newInstance();
         } catch (NoSuchMethodException e) {
-            System.out.print("Invalid executor configured as "+executorType+" . Unable to load the class");
+            System.out.print("Invalid executor configured as " + executorType + " . Unable to load the class");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -84,5 +55,7 @@ public class ActionExecutorFactory {
 
         return null;
     }
+
+
 
 }

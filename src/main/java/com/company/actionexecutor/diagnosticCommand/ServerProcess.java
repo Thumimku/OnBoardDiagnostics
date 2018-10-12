@@ -1,4 +1,4 @@
-package com.company.actionexecutor.diagnosticCommand.dumper;
+package com.company.actionexecutor.diagnosticCommand;
 /*
  * Copyright (c) 2005-2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -73,4 +73,5 @@ public class ServerProcess {
         }
         return false;
     }
+
 }

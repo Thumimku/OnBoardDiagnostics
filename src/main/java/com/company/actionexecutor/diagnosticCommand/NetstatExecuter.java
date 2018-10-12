@@ -17,8 +17,6 @@ package com.company.actionexecutor.diagnosticCommand;
  *  under the License.
  */
 
-import com.company.OsValidator;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -29,32 +27,29 @@ import java.util.Scanner;
  *
  * @author thumilan@wso2.com
  */
-public class NetstatExecuter implements ActionExecutor{
-
-
-
+public class NetstatExecuter extends ActionExecutor {
 
 
 
     /**
      * Method used to do memory dump with using Java Runtime Environment and jmap command.
+     *
      * @param filepath
      */
     @Override
     public void execute(String filepath) {
 
-
         if (new File(filepath).exists()) { // check whether file exists before dumping.
             System.out.print("\t Netstat Successfuly done.\n");
-            String filename= "/netstat.txt ";
+            String filename = "/netstat.txt ";
             String frame = filepath + filename;
             String command;
-            if(OsValidator.isUnix()){
+            if (OsValidator.isUnix()) {
                 command = "netstat -lt";
 
-            }else if (OsValidator.isWindows()){
+            } else if (OsValidator.isWindows()) {
                 command = "netstat -f";
-            }else {
+            } else {
                 command = null;
             }
             try {
@@ -82,5 +77,6 @@ public class NetstatExecuter implements ActionExecutor{
         }
 
     }
+
 
 }

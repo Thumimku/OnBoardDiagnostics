@@ -1,4 +1,4 @@
-package com.company.actionexecutor.diagnosticCommand.dumper;
+package com.company.actionexecutor.diagnosticCommand;
 /*
  * Copyright (c) 2005-2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -17,7 +17,6 @@ package com.company.actionexecutor.diagnosticCommand.dumper;
  *  under the License.
  */
 
-import com.company.actionexecutor.diagnosticCommand.ActionExecutor;
 import java.io.File;
 import java.io.IOException;
 
@@ -30,23 +29,22 @@ import java.io.IOException;
  * <p>
  * This class use Java Runtinme enviroment and jmap command to do memory dump.
  */
-public class MemoryDumper implements ActionExecutor {
+public class MemoryDumper extends ActionExecutor {
 
     /**
      * This string is used to represent process id.
      */
-    private String processId;
+    private ServerProcess serverProcess;
 
     /**
      * Creates MemoryDumper with process id.
-     *
-     * @param processId process id which used for memory dumping
      */
-    public MemoryDumper(String processId) {
+    public MemoryDumper() {
 
-        this.processId = processId;
+        this.serverProcess = new ServerProcess();
 
     }
+
 
     /**
      * Method used to do memory dump with using Java Runtime Environment and jmap command.
@@ -58,16 +56,17 @@ public class MemoryDumper implements ActionExecutor {
 
         if (new File(filepath).exists()) { // check whether file exists before dumping.
             String filename = "/heap-dump.hprof ";
-            String frame = System.getenv("JAVA_HOME") + "/bin/jmap -dump:live,format=b,file=" + filepath + filename + this.processId;
+            String frame = System.getenv("JAVA_HOME") + "/bin/jmap -dump:live,format=b,file=" + filepath + filename + serverProcess.getProcessId();
             try {
                 Runtime.getRuntime().exec(frame);
                 System.out.print("\t Memory Dump Successfully Dumped.\n");
             } catch (IOException e) {
-                System.out.print("Unable to do Memory dump for " + processId);
+                System.out.print("Unable to do Memory dump for " + serverProcess.getProcessId());
             }
 
         }
 
     }
+
 
 }
